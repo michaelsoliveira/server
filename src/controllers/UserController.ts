@@ -15,10 +15,18 @@ export class UserController {
         try {    
             const user = await UserService.create({ username, email, password })
             
-            return response.json(user)
+            return response.json({
+                error: false,
+                user,
+                errorMessage: null
+            })
 
         } catch (error) {
-            return response.status(400).send(error.message)
+            return response.json({
+                error: true,
+                user: null,
+                errorMessage: error.message
+            })
         }
     }
 
@@ -33,8 +41,9 @@ export class UserController {
     }
 
     async findOne(request: Request, response: Response) {
+        const { id } = request.params
         try {
-            let users = await UserService.getAll()
+            let users = await UserService.findOne(id)
 
             return response.json(users)
         } catch(error) {

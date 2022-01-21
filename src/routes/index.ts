@@ -6,9 +6,11 @@ import { Authentication } from "../middleware/auth.middleware"
 
 const routes = express.Router()
 
-routes.post('/users', new UserController().store)
 routes.get('/users', Authentication(), new UserController().findAll)
+routes.get('/users/:id', Authentication(), new UserController().findOne)
+routes.post('/users/create', new UserController().store)
 routes.post('/auth/login', new AuthController().login)
+routes.get('/auth/me', Authentication(), new AuthController().getUserByToken)
 routes.post('/auth/refresh', new AuthController().refreshToken)
 
 export default routes;

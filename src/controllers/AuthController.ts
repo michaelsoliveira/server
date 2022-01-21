@@ -28,6 +28,16 @@ export class AuthController {
         }
     }
 
+    async getUserByToken(request: Request, response: Response): Promise<Response> {
+        const user = request.user
+
+        // if (!user) {
+        //     return response.status(400).json({ "Error": 'User not is Authenticated' })
+        // }
+
+        return response.status(200).json(request.user)
+    }
+
     async refreshToken(request: Request, response: Response): Promise<Response> {
         const refreshToken = request.body.token
 

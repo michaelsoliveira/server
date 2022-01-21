@@ -13,7 +13,7 @@ export interface UserRequest {
 }
 
 interface TokenData {
-    token: string;
+    accessToken: string;
     expiresIn: number;
 }
 
@@ -25,8 +25,16 @@ class AuthService {
     }
     
     async execute({ email, password }: UserRequest) {
-        const userRepository = await getRepository(User)
-        const user = await userRepository.findOne({ where: { email } })
+        const userRepository = await getRepository(User).createQueryBuilder("users")
+        const user = await userRepository
+            .select([
+                "users.id",
+                "users.username",
+                "users.password",
+                "users.email"
+            ])
+            .where("users.email = :email", { email })
+            .getOne()
 
         if (!user) throw new Error("User does not exists")
 
@@ -64,8 +72,13 @@ class AuthService {
 
         return {
             expiresIn,
-            token
+            accessToken: token
         }
+    }
+
+    async getUserByJWT(token: string) {
+        const secret = config.server.JWT_SECRET
+        return jwt.verify(token, secret)
     }
 
     createRefreshToken(user: User) {
@@ -97,8 +110,6 @@ class AuthService {
 
         this.refreshTokens.push(newRefreshToken)
 
-        console.log(this.refreshTokens)
-
         return {
             token: newAccessToken,
             refreshToken: newRefreshToken
@@ -106,7 +117,7 @@ class AuthService {
     }
 
     createCookie(tokenData: TokenData) {
-        return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+        return `Authorization=Bearer ${tokenData.accessToken}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
     }
 }
 

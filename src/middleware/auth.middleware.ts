@@ -20,7 +20,7 @@ export const Authentication = () => {
         try {
             const verificationResponse = jwt.verify(token, config.server.JWT_SECRET) as DataStoredInToken
 
-            const user = await userService.findOne(verificationResponse)
+            const user = await userService.findOne(verificationResponse.id)
             
             request.user = {
                 id: user.id,

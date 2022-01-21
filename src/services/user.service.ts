@@ -34,11 +34,11 @@ class UserService {
         return userRepository.find();
     };
 
-    async findOne(userAuthenticated: DataStoredInToken): Promise<User> {
-        const user = await getRepository(User).findOne(userAuthenticated.id);
-        if (!user) throw new Error("User not Found");
+    async findOne(requestId: string): Promise<User> {
+        const user = await getRepository(User).findOne({ where: { id: requestId } });
+        if (!user) throw new Error("User not Found"); 
 
-        return user;
+        return user
     }
 }
 
