@@ -21,10 +21,18 @@ export class AuthController {
             
             response.setHeader('Set-Cookie', [authService.createCookie(user.token)]);
             
-            return response.json(user)
+            return response.json({
+                error: false,
+                errorMessage: null,
+                data: user
+            })
 
         } catch (error) {
-            return response.status(400).json(error.message)
+            return response.status(403).json({
+                error: true,
+                errorMessage: error.message,
+                user: null
+            })
         }
     }
 

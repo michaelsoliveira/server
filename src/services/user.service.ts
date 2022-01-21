@@ -17,7 +17,7 @@ class UserService {
         const userExists = await userRepository.findOne({ where: { email } })
 
         if (userExists) {
-            throw new Error("User already exists")
+            throw new Error("Já existe um usuário cadastrado com este e-mail")
         }
 
         const passwordHash = await bcrypt.hash(password, 10)

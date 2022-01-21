@@ -30,7 +30,7 @@ export const Authentication = () => {
 
             return next()
         } catch (error) {
-            return response.status(401).json(error.message)
+            return response.status(401).json({ error: true, errorMessage: error.message, data: null })
         }
     }
 }

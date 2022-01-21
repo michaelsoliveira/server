@@ -36,12 +36,12 @@ class AuthService {
             .where("users.email = :email", { email })
             .getOne()
 
-        if (!user) throw new Error("User does not exists")
+        if (!user) throw new Error("Usuário informado não existe na base de dados")
 
         const passwordMatch = await bcrypt.compare(password, user.password)
 
         if (!passwordMatch) {
-            throw new Error("User or Password incorrect")
+            throw new Error("A senha informada está incorreta")
         }
 
         const token = this.createToken(user)
