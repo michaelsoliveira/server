@@ -7,42 +7,40 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { BaseModel } from "./BaseEntity";
 import { Empresa } from "./Empresa";
 import { Upa } from "./Upa";
 
-@Index("umf_pkey", ["idUmf"], { unique: true })
-@Entity("umf", { schema: "public" })
-export class Umf {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_umf" })
-  idUmf: string;
+// @Index("umf_pkey", ["idUmf"], { unique: true })
+@Entity("umf")
+export class Umf extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_umf" })
+  // idUmf: string;
 
-  @Column("character varying", { name: "nome", length: 50 })
+  @Column({ name: "nome", length: 50 })
   nome: string;
 
-  @Column("character varying", {
+  @Column({
     name: "municipio",
     nullable: true,
     length: 30,
   })
-  municipio: string | null;
+  municipio: string;
 
-  @Column("character varying", { name: "estado", nullable: true, length: 2 })
-  estado: string | null;
+  @Column({ name: "estado", nullable: true, length: 2 })
+  estado: string;
 
-  @Column("character varying", {
+  @Column({
     name: "localizacao",
     nullable: true,
     length: 50,
   })
-  localizacao: string | null;
+  localizacao: string;
 
-  @ManyToOne(() => Empresa, (empresa) => empresa.umfs, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  })
-  @JoinColumn([{ name: "id_empresa", referencedColumnName: "idEmpresa" }])
-  idEmpresa: Empresa;
+  @ManyToOne(() => Empresa, (empresa) => empresa.umfs)
+  @JoinColumn([{ name: "id_empresa", referencedColumnName: "id" }])
+  empresa: Empresa;
 
-  @OneToMany(() => Upa, (upa) => upa.idUmf)
+  @OneToMany(() => Upa, (upa) => upa.umf)
   upas: Upa[];
 }

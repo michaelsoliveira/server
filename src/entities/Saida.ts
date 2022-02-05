@@ -13,51 +13,52 @@ import { Motorista } from "./Motorista";
 import { Poa } from "./Poa";
 import { Veiculo } from "./Veiculo";
 import { Tora } from "./Tora";
+import { BaseModel } from "./BaseEntity";
 
 @Index("saida_pkey", ["idSaida"], { unique: true })
 @Entity("saida", { schema: "public" })
-export class Saida {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_saida" })
-  idSaida: string;
+export class Saida extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_saida" })
+  // idSaida: string;
 
-  @Column("date", { name: "data_saida", nullable: true })
+  @Column({ name: "data_saida", nullable: true })
   dataSaida: string | null;
 
-  @Column("character varying", { name: "dof", nullable: true, length: 40 })
-  dof: string | null;
+  @Column({ name: "dof", nullable: true, length: 40 })
+  dof: string;
 
-  @Column("character varying", { name: "nf", nullable: true, length: 40 })
-  nf: string | null;
+  @Column({ name: "nf", nullable: true, length: 40 })
+  nf: string;
 
-  @Column("date", { name: "data_vencimento_dof", nullable: true })
-  dataVencimentoDof: string | null;
+  @Column({ name: "data_vencimento_dof", nullable: true })
+  dataVencimentoDof: Date;
 
-  @Column("character varying", { name: "agf", nullable: true, length: 40 })
-  agf: string | null;
+  @Column({ name: "agf", nullable: true, length: 40 })
+  agf: string;
 
-  @Column("date", { name: "data_vencimento_agf", nullable: true })
-  dataVencimentoAgf: string | null;
+  @Column({ name: "data_vencimento_agf", nullable: true })
+  dataVencimentoAgf: Date;
 
   @ManyToOne(() => Comprador, (comprador) => comprador.saidas)
-  @JoinColumn([{ name: "id_comprador", referencedColumnName: "idComprador" }])
-  idComprador: Comprador;
+  @JoinColumn([{ name: "id_comprador", referencedColumnName: "id" }])
+  comprador: Comprador;
 
   @ManyToOne(() => DestinoTora, (destinoTora) => destinoTora.saidas)
-  @JoinColumn([{ name: "id_destino", referencedColumnName: "idDestino" }])
-  idDestino: DestinoTora;
+  @JoinColumn([{ name: "id_destino", referencedColumnName: "destino" }])
+  destino: DestinoTora;
 
   @ManyToOne(() => Motorista, (motorista) => motorista.saidas)
-  @JoinColumn([{ name: "id_motorista", referencedColumnName: "idMotorista" }])
-  idMotorista: Motorista;
+  @JoinColumn([{ name: "id_motorista", referencedColumnName: "id" }])
+  motorista: Motorista;
 
-  @ManyToOne(() => Poa, (poa) => poa.saidas)
-  @JoinColumn([{ name: "id_poa", referencedColumnName: "idPoa" }])
-  idPoa: Poa;
+  // @ManyToOne(() => Poa, (poa) => poa.saidas)
+  // @JoinColumn([{ name: "id_poa", referencedColumnName: "id" }])
+  // poa: Poa;
 
   @ManyToOne(() => Veiculo, (veiculo) => veiculo.saidas)
-  @JoinColumn([{ name: "id_veiculo", referencedColumnName: "idVeiculo" }])
-  idVeiculo: Veiculo;
+  @JoinColumn([{ name: "id_veiculo", referencedColumnName: "id" }])
+  veiculo: Veiculo;
 
-  @OneToMany(() => Tora, (tora) => tora.idSaida)
+  @OneToMany(() => Tora, (tora) => tora.saida)
   toras: Tora[];
 }

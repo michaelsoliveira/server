@@ -7,59 +7,60 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { BaseModel } from "./BaseEntity";
 import { Umf } from "./Umf";
 import { Ut } from "./Ut";
 
-@Index("upa_pkey", ["idUpa"], { unique: true })
+// @Index("upa_pkey", ["idUpa"], { unique: true })
 @Entity("upa", { schema: "public" })
-export class Upa {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_upa" })
-  idUpa: string;
+export class Upa extends BaseModel{
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_upa" })
+  // idUpa: string;
 
   @Column("integer", { name: "ano" })
   ano: number;
 
-  @Column("character varying", {
+  @Column({
     name: "descricao",
     nullable: true,
     length: 50,
   })
-  descricao: string | null;
+  descricao: string;
 
-  @Column("character varying", {
+  @Column({
     name: "equacao_volume_arvore",
     nullable: true,
     length: 1000,
   })
-  equacaoVolumeArvore: string | null;
+  equacaoVolumeArvore: string;
 
-  @Column("character varying", {
+  @Column({
     name: "equacao_abasal_arvore",
     nullable: true,
     length: 1000,
   })
-  equacaoAbasalArvore: string | null;
+  equacaoAbasalArvore: string;
 
-  @Column("smallint", { name: "tipo", nullable: true })
-  tipo: number | null;
+  @Column({ name: "tipo", nullable: true })
+  tipo: number;
 
-  @Column("character varying", {
+  @Column({
     name: "sys_ref_coord",
     nullable: true,
     length: 100,
   })
-  sysRefCoord: string | null;
+  sysRefCoord: string;
 
-  @Column("integer", { name: "epsg", nullable: true })
-  epsg: number | null;
+  @Column({ name: "epsg", nullable: true })
+  epsg: number;
 
   @ManyToOne(() => Umf, (umf) => umf.upas, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  @JoinColumn([{ name: "id_umf", referencedColumnName: "idUmf" }])
-  idUmf: Umf;
+  @JoinColumn([{ name: "id_umf", referencedColumnName: "id" }])
+  umf: Umf;
 
-  @OneToMany(() => Ut, (ut) => ut.idUpa)
+  @OneToMany(() => Ut, (ut) => ut.upa)
   uts: Ut[];
 }

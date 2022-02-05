@@ -1,9 +1,8 @@
 import { Column, Entity } from "typeorm";
+import { BaseModel } from "./BaseEntity";
 
 @Entity("teste_equacao", { schema: "public" })
-export class TesteEquacao {
-  @Column("integer", { name: "id", nullable: true })
-  id: number | null;
+export class TesteEquacao extends BaseModel {
 
   @Column("double precision", { name: "volume", nullable: true, precision: 53 })
   volume: number | null;

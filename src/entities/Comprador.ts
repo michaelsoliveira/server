@@ -5,20 +5,22 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from "typeorm";
+import { BaseModel } from "./BaseEntity";
 import { Pessoa } from "./Pessoa";
 import { Saida } from "./Saida";
 
 @Index("comprador_pkey", ["idComprador"], { unique: true })
 @Entity("comprador", { schema: "public" })
-export class Comprador {
-  @Column("integer", { primary: true, name: "id_comprador" })
-  idComprador: number;
+export class Comprador extends BaseModel {
+  // @Column("integer", { primary: true, name: "id_comprador" })
+  // idComprador: number;
 
-  @ManyToOne(() => Pessoa, (pessoa) => pessoa.compradors)
-  @JoinColumn([{ name: "pessoa_id_pessoa", referencedColumnName: "idPessoa" }])
-  pessoaIdPessoa: Pessoa;
+  @OneToOne(() => Pessoa, (pessoa) => pessoa.comprador)
+  @JoinColumn([{ name: "id_pessoa", referencedColumnName: "id" }])
+  pessoa: Pessoa;
 
-  @OneToMany(() => Saida, (saida) => saida.idComprador)
+  @OneToMany(() => Saida, (saida) => saida.comprador)
   saidas: Saida[];
 }

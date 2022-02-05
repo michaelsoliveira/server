@@ -9,44 +9,44 @@ import {
 } from "typeorm";
 import { Poa } from "./Poa";
 import { Especie } from "./Especie";
+import { BaseModel } from "./BaseEntity";
 
-@Index("categoria_especie_pkey", ["idCategoria"], { unique: true })
+// @Index("categoria_especie_pkey", ["idCategoria"], { unique: true })
 @Entity("categoria_especie", { schema: "public" })
-export class CategoriaEspecie {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_categoria" })
-  idCategoria: string;
+export class CategoriaEspecie extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_categoria" })
+  // idCategoria: string;
 
-  @Column("character varying", { name: "nome", nullable: true, length: 50 })
-  nome: string | null;
+  @Column({ name: "nome", nullable: true, length: 50 })
+  nome: string;
 
-  @Column("smallint", { name: "criterio_fuste", nullable: true })
-  criterioFuste: number | null;
+  @Column({type: "smallint",  name: "criterio_fuste", nullable: true })
+  criterioFuste: number;
 
-  @Column("smallint", { name: "criterio_dminc", nullable: true })
-  criterioDminc: number | null;
+  @Column({type: "smallint",  name: "criterio_dminc", nullable: true })
+  criterioDminc: number;
 
-  @Column("smallint", { name: "criterio_dmaxc", nullable: true })
-  criterioDmaxc: number | null;
+  @Column({type: "smallint",  name: "criterio_dmaxc", nullable: true })
+  criterioDmaxc: number;
 
-  @Column("smallint", { name: "criterio_n_min", nullable: true })
-  criterioNMin: number | null;
+  @Column({type: "smallint",  name: "criterio_n_min", nullable: true })
+  criterioNMin: number;
 
-  @Column("smallint", { name: "criterio_perc_min", nullable: true })
-  criterioPercMin: number | null;
+  @Column({type: "smallint", name: "criterio_perc_min", nullable: true })
+  criterioPercMin: number;
 
-  @Column("boolean", { name: "preservar", nullable: true })
-  preservar: boolean | null;
+  @Column({ name: "preservar", nullable: true })
+  preservar: boolean;
 
-  @Column("integer", { name: "criterio_altura", nullable: true })
-  criterioAltura: number | null;
+  @Column({type: "double precision", name: "criterio_altura", nullable: true })
+  criterioAltura: number;
 
-  @Column("integer", { name: "criterio_volume", nullable: true })
-  criterioVolume: number | null;
+  @Column({type: "double precision", name: "criterio_volume", nullable: true })
+  criterioVolume: number;
 
-  @ManyToOne(() => Poa, (poa) => poa.categoriaEspecies)
-  @JoinColumn([{ name: "id_poa", referencedColumnName: "idPoa" }])
-  idPoa: Poa;
+  // @ManyToMany(() => Poa, (poa) => poa.categoriaEspecies)
+  // poas: Poa[];
 
-  @OneToMany(() => Especie, (especie) => especie.idCategoria)
+  @OneToMany(() => Especie, (especie) => especie.categoria)
   especies: Especie[];
 }

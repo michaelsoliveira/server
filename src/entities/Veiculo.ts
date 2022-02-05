@@ -5,24 +5,25 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { BaseModel } from "./BaseEntity";
 import { Saida } from "./Saida";
 
-@Index("caminhao_pkey", ["idVeiculo"], { unique: true })
+// @Index("caminhao_pkey", ["idVeiculo"], { unique: true })
 @Entity("veiculo", { schema: "public" })
-export class Veiculo {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_veiculo" })
-  idVeiculo: string;
+export class Veiculo extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_veiculo" })
+  // idVeiculo: string;
 
-  @Column("character varying", { name: "placa", nullable: true, length: 8 })
-  placa: string | null;
+  @Column({ name: "placa", nullable: true, length: 8 })
+  placa: string;
 
-  @Column("character varying", {
+  @Column({
     name: "descricao",
     nullable: true,
     length: 250,
   })
-  descricao: string | null;
+  descricao: string;
 
-  @OneToMany(() => Saida, (saida) => saida.idVeiculo)
+  @OneToMany(() => Saida, (saida) => saida.veiculo)
   saidas: Saida[];
 }

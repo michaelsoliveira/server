@@ -15,99 +15,100 @@ import { Ut } from "./Ut";
 import { Tora } from "./Tora";
 
 @Index("inventario_pkey", ["idArvore"], { unique: true })
-@Index("arvore_ut_unique", ["idUt", "numeroArvore"], { unique: true })
+@Index("arvore_ut_unique", ["ut", "numeroArvore"], { unique: true })
 @Entity("arvore", { schema: "public" })
 export class Arvore {
   @PrimaryGeneratedColumn({ type: "bigint", name: "id_arvore" })
   idArvore: string;
 
-  @Column("bigint", { name: "id_ut", nullable: true, unique: true })
-  idUt: string | null;
+  @Column({ name: "id_ut", nullable: true, unique: true })
+  ut: string;
 
-  @Column("integer", { name: "numero_arvore", nullable: true, unique: true })
-  numeroArvore: number | null;
+  @Column({ type: "integer", name: "numero_arvore", nullable: true, unique: true })
+  numeroArvore: number;
 
-  @Column("double precision", { name: "dap", nullable: true, precision: 53 })
-  dap: number | null;
+  @Column({ type: "double precision", name: "dap", nullable: true, precision: 53 })
+  dap: number;
 
-  @Column("double precision", { name: "altura", nullable: true, precision: 53 })
-  altura: number | null;
+  @Column({ type: "double precision", name: "altura", nullable: true, precision: 53 })
+  altura: number;
 
-  @Column("integer", { name: "fuste", nullable: true })
-  fuste: number | null;
+  @Column({ type: "smallint", name: "fuste", nullable: true })
+  fuste: number;
 
-  @Column("double precision", {
+  @Column({
+    type: "double precision",
     name: "area_basal",
     nullable: true,
     precision: 53,
   })
-  areaBasal: number | null;
+  areaBasal: number;
 
-  @Column("double precision", { name: "volume", nullable: true, precision: 53 })
-  volume: number | null;
+  @Column({ type: "double precision", name: "volume", nullable: true, precision: 53 })
+  volume: number;
 
-  @Column("character varying", {
+  @Column({
     name: "comentario",
     nullable: true,
     length: 100,
   })
-  comentario: string | null;
+  comentario: string;
 
-  @Column("character varying", { name: "orient_x", nullable: true, length: 1 })
-  orientX: string | null;
+  @Column({ name: "orient_x", nullable: true, length: 1 })
+  orientX: string;
 
-  @Column("double precision", { name: "lat_x", nullable: true, precision: 53 })
-  latX: number | null;
+  @Column({ type: "double precision", name: "lat_x", nullable: true, precision: 53 })
+  latX: number;
 
-  @Column("double precision", { name: "long_y", nullable: true, precision: 53 })
-  longY: number | null;
+  @Column({ type: "double precision", name: "long_y", nullable: true, precision: 53 })
+  longY: number;
 
-  @Column("integer", { name: "faixa", nullable: true })
-  faixa: number | null;
+  @Column({ type: "integer", name: "faixa", nullable: true })
+  faixa: number;
 
-  @Column("integer", { name: "gps", nullable: true })
-  gps: number | null;
+  @Column({ type: "integer", name: "gps", nullable: true })
+  gps: number;
 
-  @Column("boolean", { name: "derrubada", nullable: true })
-  derrubada: boolean | null;
+  @Column({ name: "derrubada", nullable: true })
+  derrubada: boolean;
 
-  @Column("character varying", {
+  @Column({
     name: "motivo_nao_derruba",
     nullable: true,
     length: 120,
   })
-  motivoNaoDerruba: string | null;
+  motivoNaoDerruba: string;
 
-  @Column("smallint", { name: "secoes", nullable: true })
-  secoes: number | null;
+  @Column({ type: "smallint", name: "secoes", nullable: true })
+  secoes: number;
 
-  @Column("bigint", { name: "id_substituida", nullable: true })
-  idSubstituida: string | null;
+  @Column({ name: "id_substituida", nullable: true })
+  idSubstituida: string;
 
-  @Column("boolean", { name: "substituida", nullable: true })
-  substituida: boolean | null;
+  @Column({ name: "substituida", nullable: true })
+  substituida: boolean;
 
-  @Column("smallint", { name: "ponto", nullable: true })
-  ponto: number | null;
+  @Column({ type: "smallint", name: "ponto", nullable: true })
+  ponto: number;
 
-  @Column("geometry", { name: "ponto_arvore", nullable: true })
-  pontoArvore: string | null;
+  @Column({ type: "geometry", name: "ponto_arvore", nullable: true })
+  pontoArvore: string;
 
-  @Column("point", { name: "arv_ponto", nullable: true })
-  arvPonto: string | object | null;
+  @Column({ type: "point", name: "arv_ponto", nullable: true })
+  arvPonto: object;
 
-  @Column("double precision", { name: "lat", nullable: true, precision: 53 })
-  lat: number | null;
+  @Column({type: "double precision", name: "lat", nullable: true, precision: 53 })
+  lat: number;
 
-  @Column("double precision", { name: "lng", nullable: true, precision: 53 })
-  lng: number | null;
+  @Column({type: "double precision", name: "lng", nullable: true, precision: 53 })
+  lng: number;
 
   @ManyToOne(() => Especie, (especie) => especie.arvores, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  @JoinColumn([{ name: "id_especie", referencedColumnName: "idEspecie" }])
-  idEspecie: Especie;
+  @JoinColumn([{ name: "id_especie", referencedColumnName: "id" }])
+  especie: Especie;
 
   @ManyToOne(
     () => MotivoPreservacaoArvore,
@@ -133,12 +134,12 @@ export class Arvore {
   @JoinColumn([{ name: "id_situacao", referencedColumnName: "idSituacao" }])
   idSituacao: SituacaoArvore;
 
-  @ManyToOne(() => Ut, (ut) => ut.arvores, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  })
-  @JoinColumn([{ name: "id_ut", referencedColumnName: "idUt" }])
-  idUt2: Ut;
+  // @ManyToOne(() => Ut, (ut) => ut.arvores, {
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // })
+  // @JoinColumn([{ name: "id_ut", referencedColumnName: "id" }])
+  // ut: Ut;
 
   @OneToMany(() => Tora, (tora) => tora.idArvore)
   toras: Tora[];

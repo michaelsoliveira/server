@@ -7,94 +7,93 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+// import { Arvore } from "./Arvore";
+// import { CategoriaEspecieUt } from "./CategoriaEspecieUt";
+// import { Tora } from "./Tora";
+// import { Poa } from "./Poa";
+import { Upa } from "./Upa";
+import { BaseModel } from "./BaseEntity";
 import { Arvore } from "./Arvore";
-import { CategoriaEspecieUt } from "./CategoriaEspecieUt";
 import { Tora } from "./Tora";
 import { Poa } from "./Poa";
-import { Upa } from "./Upa";
 
-@Index("ut_pkey", ["idUt"], { unique: true })
+// @Index("ut_pkey", ["idUt"], { unique: true })
 @Entity("ut", { schema: "public" })
-export class Ut {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_ut" })
-  idUt: string;
+export class Ut extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_ut" })
+  // idUt: string;
 
   @Column("integer", { name: "numero_ut" })
   numeroUt: number;
 
   @Column("double precision", {
     name: "area_util",
-    nullable: true,
-    precision: 53,
+    nullable: true
   })
-  areaUtil: number | null;
+  areaUtil: number;
+
+  @Column({ name: "quantidade_faixas", nullable: true })
+  quantidadeFaixas: number;
+
+  @Column({ name: "largura_faixas", nullable: true })
+  larguraFaixas: number;
+
+  @Column({ name: "comprimento_faixas", nullable: true })
+  comprimentoFaixas: number;
 
   @Column("double precision", {
     name: "area_total",
-    nullable: true,
-    precision: 53,
+    nullable: true
   })
-  areaTotal: number | null;
-
-  @Column("integer", { name: "quantidade_faixas", nullable: true })
-  quantidadeFaixas: number | null;
-
-  @Column("integer", { name: "largura_faixas", nullable: true })
-  larguraFaixas: number | null;
-
-  @Column("integer", { name: "comprimento_faixas", nullable: true })
-  comprimentoFaixas: number | null;
+  areaTotal: number;
 
   @Column("double precision", {
     name: "azimute",
-    nullable: true,
-    precision: 53,
+    nullable: true
   })
-  azimute: number | null;
+  azimute: number;
 
-  @Column("integer", { name: "quadrante", nullable: true })
-  quadrante: number | null;
+  @Column({ name: "quadrante", nullable: true })
+  quadrante: number;
 
   @Column("double precision", {
     name: "latitude",
-    nullable: true,
-    precision: 53,
+    nullable: true
   })
-  latitude: number | null;
+  latitude: number;
 
   @Column("double precision", {
     name: "longitude",
-    nullable: true,
-    precision: 53,
+    nullable: true
   })
-  longitude: number | null;
+  longitude: number;
 
-  @Column("bytea", { name: "shapefile", nullable: true })
-  shapefile: Buffer | null;
+  @Column({ type: "bytea", name: "shapefile", nullable: true })
+  shapefile: Buffer;
 
-  @Column("geometry", { name: "origem", nullable: true })
-  origem: string | null;
+  @Column({type: "geometry", name: "origem", nullable: true })
+  origem: string;
 
-  @OneToMany(() => Arvore, (arvore) => arvore.idUt2)
-  arvores: Arvore[];
+  // @OneToMany(() => Arvore, (arvore) => arvore.ut)
+  // arvores: Arvore[];
 
-  @OneToMany(
-    () => CategoriaEspecieUt,
-    (categoriaEspecieUt) => categoriaEspecieUt.idUt
-  )
-  categoriaEspecieUts: CategoriaEspecieUt[];
+  // @OneToMany(
+  //   () => CategoriaEspecieUt,
+  //   (categoriaEspecieUt) => categoriaEspecieUt.idUt
+  // )
+  // categoriaEspecieUts: CategoriaEspecieUt[];
 
-  @OneToMany(() => Tora, (tora) => tora.idUt)
-  toras: Tora[];
+  // @OneToMany(() => Tora, (tora) => tora.ut)
+  // toras: Tora[];
 
-  @ManyToOne(() => Poa, (poa) => poa.uts)
-  @JoinColumn([{ name: "id_poa", referencedColumnName: "idPoa" }])
-  idPoa: Poa;
+  // @ManyToOne(() => Poa, (poa) => poa.uts)
+  // @JoinColumn([{ name: "id_poa", referencedColumnName: "id" }])
+  // poa: Poa;
 
   @ManyToOne(() => Upa, (upa) => upa.uts, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  @JoinColumn([{ name: "id_upa", referencedColumnName: "idUpa" }])
-  idUpa: Upa;
+  @JoinColumn([{ name: "id_upa", referencedColumnName: "id" }])
+  upa: Upa;
 }

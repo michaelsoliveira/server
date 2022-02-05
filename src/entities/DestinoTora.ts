@@ -10,34 +10,35 @@ import {
 import { TipoDestino } from "./TipoDestino";
 import { Saida } from "./Saida";
 import { Tora } from "./Tora";
+import { BaseModel } from "./BaseEntity";
 
-@Index("destino_tora_pkey", ["idDestino"], { unique: true })
-@Index("uk_jc1a8o2ukiaktxugqwmmtgv81", ["nome"], { unique: true })
+// @Index("destino_tora_pkey", ["idDestino"], { unique: true })
+@Index("uk_nome_tora", ["nome"], { unique: true })
 @Entity("destino_tora", { schema: "public" })
-export class DestinoTora {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_destino" })
-  idDestino: string;
+export class DestinoTora extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_destino" })
+  // idDestino: string;
 
   @Column("character varying", {
     name: "descricao",
     nullable: true,
     length: 40,
   })
-  descricao: string | null;
+  descricao: string;
 
-  @Column("timestamp without time zone", {
-    name: "data_atualizacao",
-    nullable: true,
-  })
-  dataAtualizacao: Date | null;
+  // @Column({
+  //   name: "data_atualizacao",
+  //   nullable: true,
+  // })
+  // dataAtualizacao: Date;
 
-  @Column("timestamp without time zone", {
-    name: "data_cadastro",
-    nullable: true,
-  })
-  dataCadastro: Date | null;
+  // @Column("timestamp without time zone", {
+  //   name: "data_cadastro",
+  //   nullable: true,
+  // })
+  // dataCadastro: Date;
 
-  @Column("character varying", {
+  @Column({
     name: "nome",
     nullable: true,
     unique: true,
@@ -47,13 +48,13 @@ export class DestinoTora {
 
   @ManyToOne(() => TipoDestino, (tipoDestino) => tipoDestino.destinoToras)
   @JoinColumn([
-    { name: "id_tipo_destino", referencedColumnName: "idTipoDestino" },
+    { name: "id_tipo_destino", referencedColumnName: "id" },
   ])
-  idTipoDestino: TipoDestino;
+  tipoDestino: TipoDestino;
 
-  @OneToMany(() => Saida, (saida) => saida.idDestino)
+  @OneToMany(() => Saida, (saida) => saida.destino)
   saidas: Saida[];
 
-  @OneToMany(() => Tora, (tora) => tora.idDestino)
+  @OneToMany(() => Tora, (tora) => tora.destino)
   toras: Tora[];
 }

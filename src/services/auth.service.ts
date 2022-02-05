@@ -13,8 +13,8 @@ export interface UserRequest {
 }
 
 interface TokenData {
-    accessToken: string;
-    expiresIn: number;
+    access_token: string;
+    expires_in: number;
 }
 
 class AuthService {
@@ -45,23 +45,27 @@ class AuthService {
         }
 
         const token = this.createToken(user)
-        const refreshToken = this.createRefreshToken(user)
+        const refresh_token = this.createRefreshToken(user)
 
-        this.refreshTokens.push(refreshToken)
+        const { access_token, expires_in } = token
+
+        this.refreshTokens.push(refresh_token)
 
         return {
             user: {
                 id: user.id,
                 username: user.username,
-                email: user.email
+                email: user.email,
+                image: '',
+                access_token,
+                expires_in,
+                refresh_token
             },
-            token,
-            refreshToken
         }
     }
 
     private createToken(user: User): TokenData {
-        const expiresIn = 60 * 60
+        const expiresIn = 60 * 60 * 2
         const secret = config.server.JWT_SECRET
         const DataStoredInToken: DataStoredInToken = {
             id: user.id,
@@ -71,8 +75,8 @@ class AuthService {
         const token = jwt.sign(DataStoredInToken, secret, { expiresIn })
 
         return {
-            expiresIn,
-            accessToken: token
+            expires_in: expiresIn,
+            access_token: token
         }
     }
 
@@ -111,13 +115,13 @@ class AuthService {
         this.refreshTokens.push(newRefreshToken)
 
         return {
-            token: newAccessToken,
-            refreshToken: newRefreshToken
+            access_token: newAccessToken,
+            refresh_token: newRefreshToken
         }
     }
 
-    createCookie(tokenData: TokenData) {
-        return `Authorization=Bearer ${tokenData.accessToken}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+    createCookie(tokenData: any) {
+        return `Authorization=Bearer ${tokenData.access_token}; HttpOnly; Max-Age=${tokenData.expires_in}`;
     }
 }
 

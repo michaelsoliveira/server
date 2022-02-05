@@ -121,14 +121,14 @@ export class Tora {
   idArvore: Arvore;
 
   @ManyToOne(() => DestinoTora, (destinoTora) => destinoTora.toras)
-  @JoinColumn([{ name: "id_destino", referencedColumnName: "idDestino" }])
-  idDestino: DestinoTora;
+  @JoinColumn([{ name: "id_destino", referencedColumnName: "id" }])
+  destino: DestinoTora;
 
   @ManyToOne(() => Saida, (saida) => saida.toras)
-  @JoinColumn([{ name: "id_saida", referencedColumnName: "idSaida" }])
-  idSaida: Saida;
+  @JoinColumn([{ name: "id_saida", referencedColumnName: "id" }])
+  saida: Saida;
 
-  @ManyToOne(() => Ut, (ut) => ut.toras)
-  @JoinColumn([{ name: "id_ut", referencedColumnName: "idUt" }])
-  idUt: Ut;
+  // @ManyToOne(() => Ut, (ut) => ut.toras)
+  // @JoinColumn([{ name: "id_ut", referencedColumnName: "id" }])
+  // ut: Ut;
 }

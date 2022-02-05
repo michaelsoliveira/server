@@ -29,5 +29,5 @@
 		"baseUrl": "."
 	},
 	"exclude": ["node_modules"],
-	"include": ["./src/**/*.tsx", "./src/**/*.ts", "index.ts", "../client/output/entities/Arquivo.ts"]
+	"include": ["./src/**/*.tsx", "./src/**/*.ts", "index.ts", "../client/output/entities/Arquivo.ts", "utils/decodeJwtGoogle.ts"]
 }

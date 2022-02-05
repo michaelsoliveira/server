@@ -3,6 +3,8 @@ import {
   Entity,
   Index,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -12,132 +14,141 @@ import { CategoriaEspecieUt } from "./CategoriaEspecieUt";
 import { SituacaoPoa } from "./SituacaoPoa";
 import { Saida } from "./Saida";
 import { Ut } from "./Ut";
+import { BaseModel } from "./BaseEntity";
+import { Usuario } from "./Usuario";
+import { User } from "./User";
 
-@Index("poa_pkey", ["idPoa"], { unique: true })
+// @Index("poa_pkey", ["idPoa"], { unique: true })
 @Entity("poa", { schema: "public" })
-export class Poa {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_poa" })
-  idPoa: string;
+export class Poa extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_poa" })
+  // idPoa: string;
 
-  @Column("character varying", {
+  @Column({
     name: "descricao",
     nullable: true,
     length: 50,
   })
-  descricao: string | null;
+  descricao: string;
 
-  @Column("character varying", {
+  @Column({
     name: "data_ultimo_plan",
     nullable: true,
     length: 50,
   })
-  dataUltimoPlan: string | null;
+  dataUltimoPlan: Date;
 
-  @Column("character varying", { name: "pmfs", nullable: true, length: 50 })
-  pmfs: string | null;
+  @Column({ name: "pmfs", nullable: true, length: 50 })
+  pmfs: string;
 
-  @Column("character varying", {
+  @Column({
     name: "nome_resp_elab",
     nullable: true,
     length: 50,
   })
-  nomeRespElab: string | null;
+  nomeRespElab: string;
 
-  @Column("character varying", {
+  @Column({
     name: "crea_resp_elab",
     nullable: true,
     length: 25,
   })
-  creaRespElab: string | null;
+  creaRespElab: string;
 
-  @Column("character varying", {
+  @Column({
     name: "art_resp_elab",
     nullable: true,
     length: 25,
   })
-  artRespElab: string | null;
+  artRespElab: string;
 
   @Column("character varying", {
     name: "nome_resp_exec",
     nullable: true,
     length: 50,
   })
-  nomeRespExec: string | null;
+  nomeRespExec: string;
 
-  @Column("character varying", {
+  @Column({
     name: "crea_resp_exec",
     nullable: true,
     length: 25,
   })
-  creaRespExec: string | null;
+  creaRespExec: string;
 
-  @Column("character varying", {
+  @Column({
     name: "art_resp_exec",
     nullable: true,
     length: 25,
   })
-  artRespExec: string | null;
+  artRespExec: string;
 
-  @Column("character varying", {
+  @Column({
     name: "nome_detentor",
     nullable: true,
     length: 50,
   })
-  nomeDetentor: string | null;
+  nomeDetentor: string;
 
-  @Column("character varying", {
+  @Column({
     name: "cpf_detentor",
     nullable: true,
     length: 11,
   })
-  cpfDetentor: string | null;
+  cpfDetentor: string;
 
   @Column("character varying", {
     name: "nome_proponente",
     nullable: true,
     length: 50,
   })
-  nomeProponente: string | null;
+  nomeProponente: string;
 
-  @Column("character varying", {
+  @Column({
     name: "cpf_proponente",
     nullable: true,
     length: 11,
   })
-  cpfProponente: string | null;
+  cpfProponente: string;
 
-  @Column("bigint", { name: "id_usuario", nullable: true })
-  idUsuario: string | null;
+  // @ManyToOne(() => User, (user) => user.poas)
+  // @JoinColumn([{ name: "id_user", referencedColumnName: "id" }])
+  // user: User;
 
-  @Column("double precision", {
+  @Column({
+    type: "double precision",
     name: "corte_maximo",
     nullable: true,
     precision: 53,
   })
-  corteMaximo: number | null;
+  corteMaximo: number;
 
-  @Column("integer", { name: "id_parent", nullable: true })
-  idParent: number | null;
+  @Column({ name: "id_parent", nullable: true })
+  idParent: number;
 
-  @OneToMany(
+  @ManyToMany(
     () => CategoriaEspecie,
-    (categoriaEspecie) => categoriaEspecie.idPoa
+    // (categoriaEspecie) => categoriaEspecie.poas,
+    {
+      cascade: false
+    }
   )
+  @JoinTable()
   categoriaEspecies: CategoriaEspecie[];
 
-  @OneToMany(
-    () => CategoriaEspecieUt,
-    (categoriaEspecieUt) => categoriaEspecieUt.idPoa
-  )
-  categoriaEspecieUts: CategoriaEspecieUt[];
+  // @OneToMany(
+  //   () => CategoriaEspecieUt,
+  //   (categoriaEspecieUt) => categoriaEspecieUt.poa
+  // )
+  // categoriaEspecieUts: CategoriaEspecieUt[];
 
-  @ManyToOne(() => SituacaoPoa, (situacaoPoa) => situacaoPoa.poas)
-  @JoinColumn([{ name: "id_situacao", referencedColumnName: "idSituacao" }])
-  idSituacao: SituacaoPoa;
+  // @ManyToOne(() => SituacaoPoa, (situacaoPoa) => situacaoPoa.poas)
+  // @JoinColumn([{ name: "id_situacao", referencedColumnName: "id" }])
+  // situacao: SituacaoPoa;
 
-  @OneToMany(() => Saida, (saida) => saida.idPoa)
-  saidas: Saida[];
+  // @OneToMany(() => Saida, (saida) => saida.poa)
+  // saidas: Saida[];
 
-  @OneToMany(() => Ut, (ut) => ut.idPoa)
-  uts: Ut[];
+  // @OneToMany(() => Ut, (ut) => ut.poa)
+  // uts: Ut[];
 }

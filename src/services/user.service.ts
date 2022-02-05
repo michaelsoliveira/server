@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt"
 import { DataStoredInToken } from "src/interfaces/DataStoredInToken"
-import { IUserRequest } from "src/interfaces/IUserRequest"
 import { getRepository, Repository, getConnection } from "typeorm"
 import { User } from "../entities/User"
 
@@ -12,17 +11,25 @@ export interface UserRequest {
 
 class UserService {
 
-    async create({ username, email, password }: UserRequest): Promise<User | Error> {
+    async create(data: any): Promise<User> {
         const userRepository = getRepository(User)
-        const userExists = await userRepository.findOne({ where: { email } })
+        const userExists = await userRepository.findOne({ where: { email: data?.email } })
 
         if (userExists) {
             throw new Error("Já existe um usuário cadastrado com este e-mail")
         }
 
-        const passwordHash = await bcrypt.hash(password, 10)
+        const passwordHash = await bcrypt.hash(data?.password, 10)
 
-        const user = userRepository.create({ username, email, password: passwordHash })
+        const preparedData = {
+            username: data?.username,
+            email: data?.email,
+            password: passwordHash,
+            provider: data?.provider,
+            idProvider: data?.idProvider
+        }
+
+        const user = userRepository.create(preparedData)
 
         await user.save()
 
@@ -39,6 +46,23 @@ class UserService {
         if (!user) throw new Error("User not Found"); 
 
         return user
+    }
+
+    async findByKey(key: string, value: string): Promise<User> {
+        const result = await getRepository(User).findOne({ where: { [key]: value } })
+
+        if (!result) throw new Error("User not found")
+
+        return result
+    }
+
+    async findByProvider(provider: string, idProvider: string): Promise<any> {
+        const query = await getRepository(User).createQueryBuilder("user")
+        const data =
+            query.where("user.provider = :provider", { provider })
+                .andWhere("user.idProvider = :idProvider", { idProvider })
+
+        return data.getOne()
     }
 }
 

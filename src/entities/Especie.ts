@@ -8,45 +8,46 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Arvore } from "./Arvore";
-import { CategoriaEspeciePoa } from "./CategoriaEspeciePoa";
+// import { CategoriaEspeciePoa } from "./CategoriaEspeciePoa";
 import { CategoriaEspecie } from "./CategoriaEspecie";
+import { BaseModel } from "./BaseEntity";
 
-@Index("especie_pkey", ["idEspecie"], { unique: true })
+// @Index("especie_pkey", ["idEspecie"], { unique: true })
 @Entity("especie", { schema: "public" })
-export class Especie {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_especie" })
-  idEspecie: string;
+export class Especie extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_especie" })
+  // idEspecie: string;
 
-  @Column("character varying", { name: "nome", nullable: true, length: 50 })
-  nome: string | null;
+  @Column({ name: "nome", nullable: true, length: 50 })
+  nome: string;
 
-  @Column("character varying", {
+  @Column({
     name: "nome_orgao",
     nullable: true,
     length: 50,
   })
-  nomeOrgao: string | null;
+  nomeOrgao: string;
 
-  @Column("character varying", {
+  @Column({
     name: "nome_cientifico",
     nullable: true,
     length: 100,
   })
-  nomeCientifico: string | null;
+  nomeCientifico: string;
 
-  @OneToMany(() => Arvore, (arvore) => arvore.idEspecie)
-  arvores: Arvore[];
+  // @OneToMany(() => Arvore, (arvore) => arvore.especie)
+  // arvores: Arvore[];
 
-  @OneToMany(
-    () => CategoriaEspeciePoa,
-    (categoriaEspeciePoa) => categoriaEspeciePoa.idEspecie
-  )
-  categoriaEspeciePoas: CategoriaEspeciePoa[];
+  // @OneToMany(
+  //   () => CategoriaEspeciePoa,
+  //   (categoriaEspeciePoa) => categoriaEspeciePoa.idEspecie
+  // )
+  // categoriaEspeciePoas: CategoriaEspeciePoa[];
 
   @ManyToOne(
     () => CategoriaEspecie,
     (categoriaEspecie) => categoriaEspecie.especies
   )
-  @JoinColumn([{ name: "id_categoria", referencedColumnName: "idCategoria" }])
-  idCategoria: CategoriaEspecie;
+  @JoinColumn([{ name: "id_categoria", referencedColumnName: "id" }])
+  categoria: CategoriaEspecie;
 }

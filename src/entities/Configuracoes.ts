@@ -1,7 +1,8 @@
 import { Column, Entity } from "typeorm";
+import { BaseModel } from "./BaseEntity";
 
 @Entity("configuracoes", { schema: "public" })
-export class Configuracoes {
+export class Configuracoes extends BaseModel {
   @Column("character varying", {
     name: "modo_acesso",
     nullable: true,

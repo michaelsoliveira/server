@@ -3,7 +3,13 @@ import jwt from "jsonwebtoken";
 import { User } from "src/entities/User";
 import { getRepository } from "typeorm";
 import authService from "../services/auth.service"
-
+const { OAuth2Client } = require('google-auth-library');
+const http = require('http');
+const url = require('url');
+import axios from 'axios'
+import { getDecodedOAuthJwtGoogle } from "../services/decodeJwtGoogle";
+// const open = require('open');
+// const destroyer = require('server-destroy');
 export interface BaseUser {
     email: string,
     password: string
@@ -19,12 +25,12 @@ export class AuthController {
         try {
             const user = await authService.execute({ email, password })
             
-            response.setHeader('Set-Cookie', [authService.createCookie(user.token)]);
+            response.setHeader('Set-Cookie', [authService.createCookie(user)]);
             
             return response.json({
                 error: false,
                 errorMessage: null,
-                data: user
+                ...user
             })
 
         } catch (error) {
@@ -36,12 +42,21 @@ export class AuthController {
         }
     }
 
+    async signInCallback(request: Request, response: Response) {
+        return response.json(request)
+    }
+
+    async googleAuth(request: Request, response: Response) {
+        const { authorization } = request.headers
+        const token = authorization?.replace('Bearer', '').trim()
+
+        const userInfo = await getDecodedOAuthJwtGoogle(token)
+        
+        return response.json(userInfo)
+    }
+
     async getUserByToken(request: Request, response: Response): Promise<Response> {
         const user = request.user
-
-        // if (!user) {
-        //     return response.status(400).json({ "Error": 'User not is Authenticated' })
-        // }
 
         return response.status(200).json(request.user)
     }

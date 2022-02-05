@@ -9,40 +9,41 @@ import {
 } from "typeorm";
 import { TipoMotorista } from "./TipoMotorista";
 import { Saida } from "./Saida";
+import { BaseModel } from "./BaseEntity";
 
-@Index("motorista_pkey", ["idMotorista"], { unique: true })
+// @Index("motorista_pkey", ["idMotorista"], { unique: true })
 @Entity("motorista", { schema: "public" })
-export class Motorista {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_motorista" })
-  idMotorista: string;
+export class Motorista extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_motorista" })
+  // idMotorista: string;
 
-  @Column("character varying", { name: "nome", nullable: true, length: 55 })
-  nome: string | null;
+  @Column({ name: "nome", nullable: true, length: 55 })
+  nome: string;
 
-  @Column("character varying", {
+  @Column({
     name: "endereco",
     nullable: true,
     length: 250,
   })
-  endereco: string | null;
+  endereco: string;
 
-  @Column("character varying", { name: "telefone", nullable: true, length: 10 })
-  telefone: string | null;
+  @Column({ name: "telefone", nullable: true, length: 10 })
+  telefone: string;
 
-  @Column("character varying", { name: "celular", nullable: true, length: 11 })
-  celular: string | null;
+  @Column({ name: "celular", nullable: true, length: 11 })
+  celular: string;
 
-  @Column("character varying", {
+  @Column({
     name: "habilitacao",
     nullable: true,
     length: 20,
   })
-  habilitacao: string | null;
+  habilitacao: string;
 
-  @ManyToOne(() => TipoMotorista, (tipoMotorista) => tipoMotorista.motoristas)
-  @JoinColumn([{ name: "id_tipo", referencedColumnName: "idTipo" }])
-  idTipo: TipoMotorista;
+  // @ManyToOne(() => TipoMotorista, (tipoMotorista) => tipoMotorista.motoristas)
+  // @JoinColumn([{ name: "id_tipo_motorista", referencedColumnName: "id" }])
+  // tipoMotorista: TipoMotorista;
 
-  @OneToMany(() => Saida, (saida) => saida.idMotorista)
+  @OneToMany(() => Saida, (saida) => saida.motorista)
   saidas: Saida[];
 }
