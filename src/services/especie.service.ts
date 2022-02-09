@@ -37,14 +37,28 @@ class EspecieService {
             })
     }
 
-    async getAll(): Promise<Especie[]> {
-        const especies = await getRepository(Especie).find()
+    async getAll(search?: any): Promise<Especie[]> {
+        const query = getRepository(Especie).createQueryBuilder('especie')
+
+        const especies = await query.select(['especie.id', 'especie.nome', 'especie.nomeOrgao', 'especie.nomeCientifico', 'categoria.id', 'categoria.nome'])
+                        .leftJoin('especie.categoria', 'categoria')
+                        .where('especie.nome ilike :q', { q: `%${search}%` })
+                        .orderBy('especie.nome')
+                        .getMany()
+                        
+        return especies
+    }
+
+    async getAllWithCategory(): Promise<Especie[]> {
+        const query = getRepository(Especie).createQueryBuilder('especie')
+        const especies = query.leftJoinAndSelect('especie.categoria', 'categoria').getMany()
 
         return especies
     }
 
     async findById(id: string) : Promise<any> {
-        const especie = await getRepository(Especie).findOne({ where: { id } })
+        const especie = await getRepository(Especie).createQueryBuilder('especie')
+            .leftJoinAndSelect('especie.categoria', 'categoria').where({ id }).getOne()
 
         return especie
     }

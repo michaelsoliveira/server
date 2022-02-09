@@ -36,6 +36,49 @@ export class UserController {
         }
     }
 
+    async update(request: Request, response: Response): Promise<Response> {
+        const id = request.user?.id
+        
+        try {    
+            const user = await UserService.update(id, request.body)
+            
+            return response.json({
+                error: false,
+                user,
+                message: 'Usuário atualizado com sucesso!'
+            })
+
+        } catch (error) {
+            return response.json({
+                error: true,
+                user: null,
+                errorMessage: error.message
+            })
+        }
+    }
+
+    async updatePassword(request: Request, response: Response): Promise<Response> {
+        const id = request.user?.id
+        const { oldPassword, newPassword } = request.body;
+        
+        try {    
+            const user = await UserService.updatePassword(id, oldPassword, newPassword)
+            
+            return response.json({
+                error: false,
+                user,
+                message: 'Senha alterada com sucesso'
+            })
+
+        } catch (error) {
+            return response.json({
+                error: true,
+                user: null,
+                message: error.message
+            })
+        }
+    }
+
     async createPermission(request: Request, response: Response) {
         const { name, description } = request.body;
 

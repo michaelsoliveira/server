@@ -12,14 +12,14 @@ export class EspecieController {
             return response.json({
                 error: false,
                 especie,
-                errorMessage: null
+                message: `Espécie ${especie.nome} cadastrada com SUCESSO!!!`
             })
 
         } catch (error) {
             return response.json({
                 error: true,
                 especie: null,
-                errorMessage: error.message
+                message: error.message
             })
         }
     }
@@ -31,14 +31,14 @@ export class EspecieController {
             return response.json({
                 error: false,
                 especie,
-                errorMessage: null
+                message: `Especie ${especie.nome} atualizada com SUCESSO!!!`
             })
 
         } catch (error) {
             return response.json({
                 error: true,
                 especie: null,
-                errorMessage: error.message
+                message: error.message
             })
         }
      }
@@ -57,25 +57,27 @@ export class EspecieController {
             return response.json({
                 error: true,
                 especie: null,
-                errorMessage: error.message
+                message: error.message
             })
         }
     }
 
     async findAll(request: Request, response: Response) {
+        const { search } = request.query
+        
         try {
-            const especies = await especieService.getAll()
+            const especies = await especieService.getAll(search)
 
             return response.json({
                 error: false,
                 especies,
-                errorMessage: null
+                message: null
             })
         } catch(error) {
             return response.json({
                 error: false,
                 especies: [],
-                errorMessage: null
+                message: null
             })
         }
     }

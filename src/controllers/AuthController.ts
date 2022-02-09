@@ -66,8 +66,8 @@ export class AuthController {
 
         if (!refreshToken) return response.status(401).json('You are not Authenticated')
         try {
-            const newToken = authService.handleRefreshToken(refreshToken)   
-
+            const newToken = await authService.handleRefreshToken(refreshToken)   
+            
             return response.json(newToken)
         } catch (error) {
             return response.status(401).json(error.message)

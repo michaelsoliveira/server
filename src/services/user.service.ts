@@ -36,6 +36,60 @@ class UserService {
         return user
     }
 
+    async update(id: string, data: any): Promise<User> {
+        const userRepository = getRepository(User)
+        const userExists = await userRepository.findOne({ where: { id } })
+
+        if (!userExists) {
+            throw new Error("Usuário não localizado")
+        }
+
+        const passwordHash = await bcrypt.hash(data?.password, 10)
+
+        const preparedData = {
+            username: data?.username,
+            email: data?.email,
+            password: passwordHash,
+            provider: data?.provider,
+            idProvider: data?.idProvider
+        }
+
+        await userRepository.update(id, preparedData)
+
+        return this.findOne(id)
+    }
+
+    async updatePassword(id: string, oldPassword: string, newPassword: string) {
+        const userRepository = getRepository(User)
+        const userData = await this.findWithPassword(id)
+
+        if (!userData) {
+            throw new Error("Usuário não localizado")
+        }
+        const validPassword = await bcrypt.compare(oldPassword, userData.password)
+        console.log(validPassword)
+
+        if (!validPassword) {
+            throw new Error("Senha informada não corresponde com a cadastrada")
+        }
+
+        const passwordHash = await bcrypt.hash(newPassword, 10)
+
+        const preparedData = {
+            username: userData?.username,
+            email: userData?.email,
+            password: passwordHash,
+            provider: userData?.provider,
+            idProvider: userData?.idProvider
+        }
+
+        console.log(preparedData)
+
+        await userRepository.update(id, preparedData)
+
+        return this.findOne(id)
+    }
+
     async getAll(): Promise<User[]> {
         const userRepository = getRepository(User);
         return userRepository.find();
@@ -63,6 +117,23 @@ class UserService {
                 .andWhere("user.idProvider = :idProvider", { idProvider })
 
         return data.getOne()
+    }
+
+    async findWithPassword(id: string) {
+        const userRepository = await getRepository(User).createQueryBuilder("users")
+        const user = await userRepository
+            .select([
+                "users.id",
+                "users.username",
+                "users.password",
+                "users.email",
+                "users.provider",
+                "users.idProvider"
+            ])
+            .where("users.id = :id", { id })
+            .getOne()
+        
+        return user
     }
 }
 

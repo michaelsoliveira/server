@@ -9,6 +9,15 @@ import { getDecodedOAuthJwtGoogle } from "../services/decodeJwtGoogle"
 const config = require("../config")
 
 export const Authentication = () => {
+    const { TokenExpiredError } = jwt;
+
+    const catchError = (err: any, res: any) => {
+    if (err instanceof TokenExpiredError) {
+        return res.status(401).send({ message: "Unauthorized! Access Token was expired!" });
+    }
+
+    return res.sendStatus(401).send({ message: "Unauthorized!" });
+    }
 
     return async (request: Request, response: Response, next: NextFunction) => {
         const { authorization } = request.headers;
@@ -25,9 +34,7 @@ export const Authentication = () => {
             switch (provider) {
                 case 'ya2': {
                     // const url = 'https://www.googleapis.com/oauth2/v2/userinfo'
-                    // const verificationResponse = jwt.verify(token, config.server.JWT_SECRET)
-                    // console.log(verificationResponse)
-
+                    
                     const provider = await getDecodedOAuthJwtGoogle(token)
 
                     const user = await userService.findByProvider('google', provider.sub)                            
@@ -83,7 +90,7 @@ export const Authentication = () => {
                     break;
                 }
                 default: {
-                    const verificationResponse = jwt.verify(token, config.server.JWT_SECRET, { algorithms: ['HS256'] }) as DataStoredInToken
+                    const verificationResponse = jwt.verify(token, config.server.JWT_SECRET) as User
 
                     const user = await userService.findOne(verificationResponse.id)
                     
@@ -92,7 +99,7 @@ export const Authentication = () => {
                         email: user.email,
                         username: user.username,
                         provider: 'local'
-                    }
+                    }    
                 }
             }
 

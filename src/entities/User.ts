@@ -3,6 +3,7 @@ import { BaseModel } from "./BaseEntity";
 import { Empresa } from "./Empresa";
 import { Permission } from "./Permission";
 import { Poa } from "./Poa";
+import { RefreshToken } from "./RefreshToken";
 import { Role } from "./Role";
 
 @Entity("users")
@@ -44,5 +45,8 @@ export class User extends BaseModel {
 
     @OneToMany(() => Empresa, (empresa) => empresa.user)
     empresas: Empresa[]
+
+    @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
+    refreshTokens: RefreshToken[]
 
 }

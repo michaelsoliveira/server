@@ -12,6 +12,7 @@ import { Poa } from "../entities/Poa"
 import { SituacaoPoa } from "../entities/SituacaoPoa"
 import { TipoMotorista } from "../entities/TipoMotorista"
 import { Projeto } from "../entities/Projeto"
+import { RefreshToken } from "../entities/RefreshToken"
 
 const dotenv = require('dotenv');
 // config() will read your .env file, parse the contents, assign it to process.env.
@@ -26,7 +27,7 @@ const main = async () => {
             username: process.env.USERNAME,
             password: process.env.PASSWORD,
             database: process.env.DATABASE_NAME,
-            entities: [Permission, Role, User, Empresa, Projeto, Umf, Upa, Ut, CategoriaEspecie, Especie],
+            entities: [Permission, Role, User, Empresa, Projeto, Umf, Upa, Ut, CategoriaEspecie, Especie, RefreshToken],
             synchronize: true
         })
         console.log('Connected to Postgres')
