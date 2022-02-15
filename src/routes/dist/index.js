@@ -1,0 +1,51 @@
+"use strict";
+exports.__esModule = true;
+var express_1 = require("express");
+var UserController_1 = require("../controllers/UserController");
+var AuthController_1 = require("../controllers/AuthController");
+var auth_middleware_1 = require("../middleware/auth.middleware");
+var EmpresaController_1 = require("../controllers/EmpresaController");
+var EspecieController_1 = require("../controllers/EspecieController");
+var multer_1 = require("multer");
+var CategoriaEspecieController_1 = require("../controllers/CategoriaEspecieController");
+var routes = express_1["default"].Router();
+routes.get('/users', auth_middleware_1.Authentication(), new UserController_1.UserController().findAll);
+routes.get('/users/:id', auth_middleware_1.Authentication(), new UserController_1.UserController().findOne);
+routes.post('/users/create', new UserController_1.UserController().store);
+routes.put('/users', auth_middleware_1.Authentication(), new UserController_1.UserController().update);
+routes.post('/users/create-role', new UserController_1.UserController().createRole);
+routes.post('/users/create-permission', new UserController_1.UserController().createPermission);
+routes.post('/users/create-role-permission', new UserController_1.UserController().createRolePermission);
+routes.post('/users/create-user-acl', new UserController_1.UserController().createUserACL);
+//Alterar senha
+routes.post('/users/change-password', auth_middleware_1.Authentication(), new UserController_1.UserController().updatePassword);
+routes.get('/provider/find', new UserController_1.UserController().findProvider);
+routes.post('/auth/login', new AuthController_1.AuthController().login);
+routes.get('/auth/oauth', new AuthController_1.AuthController().googleAuth);
+routes.get('/auth/google', new AuthController_1.AuthController().googleAuth);
+routes.get('/auth/me', auth_middleware_1.Authentication(), new AuthController_1.AuthController().getUserByToken);
+routes.post('/auth/refresh', new AuthController_1.AuthController().refreshToken);
+routes.get('/auth/callback/github', new AuthController_1.AuthController().signInCallback);
+//Empresa
+routes.post('/empresa', auth_middleware_1.Authentication(), new EmpresaController_1.EmpresaController().store);
+routes.get('/empresa', auth_middleware_1.Authentication(), new EmpresaController_1.EmpresaController().findAll);
+routes.get('/empresa/:id', auth_middleware_1.Authentication(), new EmpresaController_1.EmpresaController().findOne);
+routes.put('/empresa/:id', auth_middleware_1.Authentication(), new EmpresaController_1.EmpresaController().update);
+routes["delete"]('/empresa/:id', auth_middleware_1.Authentication(), new EmpresaController_1.EmpresaController()["delete"]);
+//Empresa
+routes.post('/categoria/', auth_middleware_1.Authentication(), new CategoriaEspecieController_1.CategoriaEspecieController().store);
+routes.get('/categoria/', auth_middleware_1.Authentication(), new CategoriaEspecieController_1.CategoriaEspecieController().findAll);
+routes.get('/categoria/:id', auth_middleware_1.Authentication(), new CategoriaEspecieController_1.CategoriaEspecieController().findOne);
+routes.get('/categoria/search/q', auth_middleware_1.Authentication(), new CategoriaEspecieController_1.CategoriaEspecieController().search);
+routes.put('/categoria/:id', auth_middleware_1.Authentication(), new CategoriaEspecieController_1.CategoriaEspecieController().update);
+routes["delete"]('/categoria/:id', auth_middleware_1.Authentication(), new CategoriaEspecieController_1.CategoriaEspecieController()["delete"]);
+var multerConfig = multer_1["default"]();
+//Especie
+routes.post('/especie', auth_middleware_1.Authentication(), new EspecieController_1.EspecieController().store);
+routes.get('/especie', auth_middleware_1.Authentication(), new EspecieController_1.EspecieController().findAll);
+routes.get('/especie/:id', auth_middleware_1.Authentication(), new EspecieController_1.EspecieController().findOne);
+routes.put('/especie/:id', auth_middleware_1.Authentication(), new EspecieController_1.EspecieController().update);
+routes["delete"]('/especie/single/:id', auth_middleware_1.Authentication(), new EspecieController_1.EspecieController()["delete"]);
+routes["delete"]('/especie/multiples', auth_middleware_1.Authentication(), new EspecieController_1.EspecieController().deleteEspecies);
+routes.post('/especie/import', multerConfig.single('file'), new EspecieController_1.EspecieController().importEspecie);
+exports["default"] = routes;

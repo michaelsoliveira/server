@@ -60,7 +60,9 @@ var CategoriaEspecie = /** @class */ (function (_super) {
         typeorm_1.OneToMany(function () { return Especie_1.Especie; }, function (especie) { return especie.categoria; })
     ], CategoriaEspecie.prototype, "especies");
     CategoriaEspecie = __decorate([
-        typeorm_1.Entity("categoria_especie", { schema: "public" })
+        typeorm_1.Entity("categoria_especie", {
+            schema: "public"
+        })
     ], CategoriaEspecie);
     return CategoriaEspecie;
 }(BaseEntity_1.BaseModel));

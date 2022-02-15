@@ -90,21 +90,71 @@ var EspecieService = /** @class */ (function () {
             });
         });
     };
-    EspecieService.prototype.getAll = function (search) {
-        return __awaiter(this, void 0, Promise, function () {
-            var query, especies;
+    EspecieService.prototype.deleteEspecies = function (ids) {
+        return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                switch (_a.label) {
+                console.log(ids);
+                ids.forEach(function (id) {
+                    typeorm_1.getRepository(Especie_1.Especie)["delete"](id);
+                });
+                return [2 /*return*/];
+            });
+        });
+    };
+    EspecieService.prototype.getAll = function (query) {
+        return __awaiter(this, void 0, Promise, function () {
+            var perPage, page, order, search, orderBy, skip, _a, data, total;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        query = typeorm_1.getRepository(Especie_1.Especie).createQueryBuilder('especie');
-                        return [4 /*yield*/, query.select(['especie.id', 'especie.nome', 'especie.nomeOrgao', 'especie.nomeCientifico', 'categoria.id', 'categoria.nome'])
-                                .leftJoin('especie.categoria', 'categoria')
-                                .where('especie.nome ilike :q', { q: "%" + search + "%" })
-                                .orderBy('especie.nome')
-                                .getMany()];
+                        perPage = query.perPage, page = query.page, order = query.order, search = query.search, orderBy = query.orderBy;
+                        skip = (page - 1) * perPage;
+                        return [4 /*yield*/, typeorm_1.getRepository(Especie_1.Especie).createQueryBuilder('especie')
+                                // .select(['especie.id', 'especie.nome', 'especie.nomeOrgao', 'especie.nomeCientifico', 'categoria.id as categoriaId', 'categoria.nome'])
+                                .leftJoinAndSelect('especie.categoria', 'categoria')
+                                .skip(skip)
+                                .take(perPage)
+                                .where({
+                                nome: search ? typeorm_1.ILike("%" + search + "%") : typeorm_1.ILike('%%')
+                            })
+                                .orderBy(orderBy, order ? order : 'ASC')
+                                .getManyAndCount()
+                            // const [data, total] = await getRepository(Especie).findAndCount({
+                            //     select: ['id', 'nome', 'nomeOrgao', 'nomeCientifico', 'categoria'],
+                            //     where: {
+                            //         nome: search ? ILike(`%${search}%`) : ILike('%%')
+                            //     },
+                            //     relations: ['categoria'],
+                            //     order: {
+                            //         [orderBy]: order ? order : 'ASC'
+                            //     },
+                            //     take: perPage,
+                            //     skip
+                            // })
+                        ];
                     case 1:
-                        especies = _a.sent();
-                        return [2 /*return*/, especies];
+                        _a = _b.sent(), data = _a[0], total = _a[1];
+                        // const [data, total] = await getRepository(Especie).findAndCount({
+                        //     select: ['id', 'nome', 'nomeOrgao', 'nomeCientifico', 'categoria'],
+                        //     where: {
+                        //         nome: search ? ILike(`%${search}%`) : ILike('%%')
+                        //     },
+                        //     relations: ['categoria'],
+                        //     order: {
+                        //         [orderBy]: order ? order : 'ASC'
+                        //     },
+                        //     take: perPage,
+                        //     skip
+                        // })
+                        return [2 /*return*/, {
+                                orderBy: orderBy,
+                                order: order,
+                                data: data,
+                                perPage: perPage,
+                                page: page,
+                                skip: skip,
+                                count: total
+                            }];
                 }
             });
         });

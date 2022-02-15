@@ -12,7 +12,9 @@ import { Especie } from "./Especie";
 import { BaseModel } from "./BaseEntity";
 
 // @Index("categoria_especie_pkey", ["idCategoria"], { unique: true })
-@Entity("categoria_especie", { schema: "public" })
+@Entity("categoria_especie", {
+  schema: "public",
+  })
 export class CategoriaEspecie extends BaseModel {
   // @PrimaryGeneratedColumn({ type: "bigint", name: "id_categoria" })
   // idCategoria: string;

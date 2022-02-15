@@ -61,12 +61,16 @@ export class CategoriaEspecieController {
 
     async findAll(request: Request, response: Response) {
         try {
-            const categorias = await categoriaService.getAll()
+            const { data, perPage, page, skip, count } = await categoriaService.getAll(request.query)
 
             return response.json({
                 error: false,
-                categorias,
-                errorMessage: null
+                categorias: data,
+                perPage,
+                page,
+                skip,
+                count,
+                message: null
             })
         } catch(error) {
             return response.json({

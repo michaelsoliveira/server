@@ -1,5 +1,5 @@
 import { CategoriaEspecie } from "../entities/CategoriaEspecie";
-import { getRepository } from "typeorm";
+import { getRepository, ILike } from "typeorm";
 
 export interface CategoriaType {
     nome: string;
@@ -41,10 +41,31 @@ class CategoriaService {
             })
     }
 
-    async getAll(): Promise<CategoriaEspecie[]> {
-        const categorias = await getRepository(CategoriaEspecie).find()
+    async getAll(query?: any): Promise<any> {
+        const { perPage, page, search } = query
+        const skip = (page - 1) * perPage
+        const [data, total] = await getRepository(CategoriaEspecie).findAndCount({
+            where: {
+                nome: search ? ILike(`%${search}%`) : ILike('%%')
+            },
+            order: { nome: 'ASC' },
+            take: perPage,
+            skip
+        })
+                        
+        return {
+            data,
+            perPage,
+            page,
+            skip,
+            count: total
+        }
+    }
 
-        return categorias
+    async deleteCategorias(categorias: string[]) {
+        categorias.forEach(id => {
+            getRepository(CategoriaEspecie).delete(id)
+        })   
     }
 
     async search(q: any) {

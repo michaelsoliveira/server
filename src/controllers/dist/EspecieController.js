@@ -136,32 +136,49 @@ var EspecieController = /** @class */ (function () {
             });
         });
     };
+    EspecieController.prototype.deleteEspecies = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var ids;
+            return __generator(this, function (_a) {
+                ids = request.body.ids;
+                especie_service_1["default"].deleteEspecies(ids);
+                return [2 /*return*/, response.json({
+                        ids: ids,
+                        message: 'Espécies deletadas com sucesso',
+                        error: false
+                    })];
+            });
+        });
+    };
     EspecieController.prototype.findAll = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var search, especies, error_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, data, perPage, orderBy, order, page, skip, count, error_4;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        search = request.query.search;
-                        _a.label = 1;
+                        _b.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, especie_service_1["default"].getAll(request.query)];
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, especie_service_1["default"].getAll(search)];
-                    case 2:
-                        especies = _a.sent();
+                        _a = _b.sent(), data = _a.data, perPage = _a.perPage, orderBy = _a.orderBy, order = _a.order, page = _a.page, skip = _a.skip, count = _a.count;
                         return [2 /*return*/, response.json({
                                 error: false,
-                                especies: especies,
+                                especies: data,
+                                orderBy: orderBy,
+                                order: order,
+                                perPage: perPage,
+                                page: page,
+                                skip: skip,
+                                count: count,
                                 message: null
                             })];
-                    case 3:
-                        error_4 = _a.sent();
+                    case 2:
+                        error_4 = _b.sent();
                         return [2 /*return*/, response.json({
                                 error: false,
                                 especies: [],
                                 message: null
                             })];
-                    case 4: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

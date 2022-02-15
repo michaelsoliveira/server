@@ -129,21 +129,25 @@ var CategoriaEspecieController = /** @class */ (function () {
     };
     CategoriaEspecieController.prototype.findAll = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var categorias, error_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, data, perPage, page, skip, count, error_4;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, categoria_service_1["default"].getAll()];
+                        _b.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, categoria_service_1["default"].getAll(request.query)];
                     case 1:
-                        categorias = _a.sent();
+                        _a = _b.sent(), data = _a.data, perPage = _a.perPage, page = _a.page, skip = _a.skip, count = _a.count;
                         return [2 /*return*/, response.json({
                                 error: false,
-                                categorias: categorias,
-                                errorMessage: null
+                                categorias: data,
+                                perPage: perPage,
+                                page: page,
+                                skip: skip,
+                                count: count,
+                                message: null
                             })];
                     case 2:
-                        error_4 = _a.sent();
+                        error_4 = _b.sent();
                         return [2 /*return*/, response.json({
                                 error: false,
                                 categorias: [],

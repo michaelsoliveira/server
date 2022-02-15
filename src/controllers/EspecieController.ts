@@ -62,15 +62,32 @@ export class EspecieController {
         }
     }
 
+    async deleteEspecies(request: Request, response: Response) {
+        const { ids } = request.body
+        especieService.deleteEspecies(ids)
+
+        return response.json({
+            ids,
+            message: 'Espécies deletadas com sucesso',
+            error: false
+        })
+    }
+
     async findAll(request: Request, response: Response) {
-        const { search } = request.query
+        // const { search } = request.query
         
         try {
-            const especies = await especieService.getAll(search)
+            const { data, perPage, orderBy, order, page, skip, count } = await especieService.getAll(request.query)
 
             return response.json({
                 error: false,
-                especies,
+                especies: data,
+                orderBy,
+                order,
+                perPage,
+                page,
+                skip,
+                count,
                 message: null
             })
         } catch(error) {

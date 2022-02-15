@@ -90,16 +90,42 @@ var CategoriaService = /** @class */ (function () {
             });
         });
     };
-    CategoriaService.prototype.getAll = function () {
+    CategoriaService.prototype.getAll = function (query) {
         return __awaiter(this, void 0, Promise, function () {
-            var categorias;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, typeorm_1.getRepository(CategoriaEspecie_1.CategoriaEspecie).find()];
+            var perPage, page, search, skip, _a, data, total;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        perPage = query.perPage, page = query.page, search = query.search;
+                        skip = (page - 1) * perPage;
+                        return [4 /*yield*/, typeorm_1.getRepository(CategoriaEspecie_1.CategoriaEspecie).findAndCount({
+                                where: {
+                                    nome: search ? typeorm_1.ILike("%" + search + "%") : typeorm_1.ILike('%%')
+                                },
+                                order: { nome: 'ASC' },
+                                take: perPage,
+                                skip: skip
+                            })];
                     case 1:
-                        categorias = _a.sent();
-                        return [2 /*return*/, categorias];
+                        _a = _b.sent(), data = _a[0], total = _a[1];
+                        return [2 /*return*/, {
+                                data: data,
+                                perPage: perPage,
+                                page: page,
+                                skip: skip,
+                                count: total
+                            }];
                 }
+            });
+        });
+    };
+    CategoriaService.prototype.deleteCategorias = function (categorias) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                categorias.forEach(function (id) {
+                    typeorm_1.getRepository(CategoriaEspecie_1.CategoriaEspecie)["delete"](id);
+                });
+                return [2 /*return*/];
             });
         });
     };
