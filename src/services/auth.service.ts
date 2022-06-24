@@ -30,7 +30,8 @@ class AuthService {
                 "users.id",
                 "users.username",
                 "users.password",
-                "users.email"
+                "users.email",
+                "users.image"
             ])
             .where("users.email = :email", { email })
             .getOne()
@@ -61,7 +62,7 @@ class AuthService {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                image: '',
+                image: user.image,
                 access_token,
                 expires_in,
                 refresh_token

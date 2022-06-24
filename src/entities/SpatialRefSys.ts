@@ -1,6 +1,7 @@
-import { Column, Entity, Index } from "typeorm";
+import { Column, Entity, Index, OneToMany } from "typeorm";
+import { Upa } from "./Upa";
 
-@Index("spatial_ref_sys_pkey", ["srid"], { unique: true })
+// @Index("spatial_ref_sys_pkey", ["srid"], { unique: true })
 @Entity("spatial_ref_sys", { schema: "public" })
 export class SpatialRefSys {
   @Column("integer", { primary: true, name: "srid" })
@@ -25,4 +26,7 @@ export class SpatialRefSys {
     length: 2048,
   })
   proj4text: string | null;
+
+  @OneToMany(() => Upa, (upa) => upa.spatialRefSys)
+  upa: Upa[]
 }

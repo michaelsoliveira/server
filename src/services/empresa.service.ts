@@ -1,5 +1,5 @@
 import { Empresa } from "../entities/Empresa";
-import { getRepository } from "typeorm";
+import { getRepository, ILike } from "typeorm";
 import { User } from "../entities/User";
 
 interface EmpresaRequest {
@@ -28,20 +28,22 @@ class EmpresaService {
         const user = await this.getUser(userId)
 
         const withUser = {
-            user,
+            // users: [user],
             ...data
         }
-
-        const empresa = repositoryEmpresa.create(withUser)
+        
+        const empresa = repositoryEmpresa.create(data)
+        empresa.users = [user]
 
         await empresa.save()
         
         return empresa
     }
 
-    async getUser(id: string) {
+    async getUser(id: string): Promise<User> {
         const user = await getRepository(User).findOne(id)
-        
+        if (!user) throw new Error("Usuário não encontrada"); 
+
         return user
     }
 
@@ -53,7 +55,7 @@ class EmpresaService {
             user,
             ...data
         }
-        await getRepository(Empresa).update(id, withUser);
+        await getRepository(Empresa).update(id, data);
 
         return this.findOne(id)
         // return userData
@@ -69,11 +71,42 @@ class EmpresaService {
     async getAll(userId: any): Promise<Empresa[]> {
         
         let query = getRepository(Empresa).createQueryBuilder("empresa")
-                    .innerJoinAndSelect("empresa.user", "user")
-            query.where("user.id = :id", { id: userId })
+            .innerJoin("empresa.users", "users")
+            query.where("users.id = :id", { id: userId })
         const empresas = await query.getMany()
 
         return empresas;
+    }
+
+    async getUsers(empresaId: string, query?: any): Promise<any> {
+        const { perPage, page, order, search, orderBy } = query
+        const skip = (page - 1) * perPage
+
+        const [data, total] = await getRepository(User).createQueryBuilder('user')
+            // .select(['user.id AS user_id', 'user.username', 'user.email'])
+            .innerJoin('user.empresas', 'empresa')
+            .skip(skip)
+            .take(perPage)
+            .where({
+                username: search ? ILike(`%${search}%`) : ILike('%%')
+            })
+            .andWhere('empresa.id = :empresaId', { empresaId })
+            .orderBy(orderBy, order ? order : 'ASC')
+            .getManyAndCount()
+                
+        // const users = await query.getManyAndCount()
+
+        // if(!users) throw new Error('Nenhum usuário cadastrado')
+
+        return {
+            orderBy,
+            order,
+            data,
+            perPage,
+            page,
+            skip,
+            count: total
+        }
     }
 
     async findOne(id: string): Promise<Empresa> {

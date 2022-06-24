@@ -4,11 +4,14 @@ import {
   Entity,
   Index,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { BaseModel } from "./BaseEntity";
+import { Endereco } from "./Endereco";
 import { Projeto } from "./Projeto";
 import { Umf } from "./Umf";
 import { User } from "./User";
@@ -18,13 +21,13 @@ export class Empresa extends BaseModel {
   // @PrimaryGeneratedColumn({ type: "bigint", name: "id_empresa" })
   // idEmpresa: string;
 
-  @Column({ name: "razao_social", length: 50 })
+  @Column({ name: "razao_social", length: 100 })
   razaoSocial: string;
 
   @Column({
     name: "nome_fantasia",
     nullable: true,
-    length: 40,
+    length: 100,
   })
   nomeFantasia: string;
 
@@ -90,12 +93,17 @@ export class Empresa extends BaseModel {
   @OneToMany(() => Umf, (umf) => umf.empresa)
   umfs: Umf[];
 
-  @ManyToOne(() => User, (user) => user.empresas)
-  @JoinColumn([
-    { name: "id_user", referencedColumnName: "id" }
-  ])
-  user: User
+  @ManyToMany(() => User, (user) => user.empresas)
+  @JoinTable({
+        name: "empresa_users",
+        joinColumns: [{ name: "id_empresa" }],
+        inverseJoinColumns: [{ name: "id_user" }]
+    })
+  users: User[]
 
   @OneToMany(() => Projeto, (projeto) => projeto.empresa)
   projetos: Projeto[]
+
+  @OneToMany(() => Endereco, (endereco) => endereco.empresa)
+  enderecos: Endereco[]
 }

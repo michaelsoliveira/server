@@ -105,7 +105,11 @@ export const Authentication = () => {
 
             return next()
         } catch (error) {
-            return response.status(401).json({ error: true, errorMessage: error.message, data: null })
+            return response.status(401).json({ 
+                error: true, 
+                message: error.message, 
+                data: null 
+            })
         }
     }
 }

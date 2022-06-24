@@ -23,8 +23,8 @@ exports.Umf = void 0;
 var typeorm_1 = require("typeorm");
 var BaseEntity_1 = require("./BaseEntity");
 var Empresa_1 = require("./Empresa");
+var Estado_1 = require("./Estado");
 var Upa_1 = require("./Upa");
-// @Index("umf_pkey", ["idUmf"], { unique: true })
 var Umf = /** @class */ (function (_super) {
     __extends(Umf, _super);
     function Umf() {
@@ -35,14 +35,9 @@ var Umf = /** @class */ (function (_super) {
     ], Umf.prototype, "nome");
     __decorate([
         typeorm_1.Column({
-            name: "municipio",
-            nullable: true,
-            length: 30
+            nullable: true
         })
     ], Umf.prototype, "municipio");
-    __decorate([
-        typeorm_1.Column({ name: "estado", nullable: true, length: 2 })
-    ], Umf.prototype, "estado");
     __decorate([
         typeorm_1.Column({
             name: "localizacao",
@@ -54,6 +49,10 @@ var Umf = /** @class */ (function (_super) {
         typeorm_1.ManyToOne(function () { return Empresa_1.Empresa; }, function (empresa) { return empresa.umfs; }),
         typeorm_1.JoinColumn([{ name: "id_empresa", referencedColumnName: "id" }])
     ], Umf.prototype, "empresa");
+    __decorate([
+        typeorm_1.ManyToOne(function () { return Estado_1.Estado; }, function (estado) { return estado.umfs; }),
+        typeorm_1.JoinColumn([{ name: "id_estado", referencedColumnName: "id" }])
+    ], Umf.prototype, "estado");
     __decorate([
         typeorm_1.OneToMany(function () { return Upa_1.Upa; }, function (upa) { return upa.umf; })
     ], Umf.prototype, "upas");

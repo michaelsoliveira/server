@@ -8,6 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.SpatialRefSys = void 0;
 var typeorm_1 = require("typeorm");
+var Upa_1 = require("./Upa");
+// @Index("spatial_ref_sys_pkey", ["srid"], { unique: true })
 var SpatialRefSys = /** @class */ (function () {
     function SpatialRefSys() {
     }
@@ -34,8 +36,10 @@ var SpatialRefSys = /** @class */ (function () {
             length: 2048
         })
     ], SpatialRefSys.prototype, "proj4text");
+    __decorate([
+        typeorm_1.OneToMany(function () { return Upa_1.Upa; }, function (upa) { return upa.spatialRefSys; })
+    ], SpatialRefSys.prototype, "upa");
     SpatialRefSys = __decorate([
-        typeorm_1.Index("spatial_ref_sys_pkey", ["srid"], { unique: true }),
         typeorm_1.Entity("spatial_ref_sys", { schema: "public" })
     ], SpatialRefSys);
     return SpatialRefSys;

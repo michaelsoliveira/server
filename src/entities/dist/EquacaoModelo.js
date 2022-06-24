@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.EquacaoModelo = void 0;
 var typeorm_1 = require("typeorm");
+// @Index("equacao_modelo_pkey", ["equacaoModeloId"], { unique: true })
 var EquacaoModelo = /** @class */ (function () {
     function EquacaoModelo() {
     }
@@ -28,7 +29,6 @@ var EquacaoModelo = /** @class */ (function () {
         typeorm_1.Column("integer", { name: "tipo", nullable: true })
     ], EquacaoModelo.prototype, "tipo");
     EquacaoModelo = __decorate([
-        typeorm_1.Index("equacao_modelo_pkey", ["equacaoModeloId"], { unique: true }),
         typeorm_1.Entity("equacao_modelo", { schema: "public" })
     ], EquacaoModelo);
     return EquacaoModelo;

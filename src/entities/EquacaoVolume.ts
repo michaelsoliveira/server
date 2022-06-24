@@ -1,10 +1,12 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
+import { BaseModel } from "./BaseEntity";
+import { Upa } from "./Upa";
 
-@Index("equacao_pkey", ["idEquacao"], { unique: true })
+// @Index("equacao_pkey", ["idEquacao"], { unique: true })
 @Entity("equacao_volume", { schema: "public" })
-export class EquacaoVolume {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id_equacao" })
-  idEquacao: string;
+export class EquacaoVolume extends BaseModel {
+  // @PrimaryGeneratedColumn({ type: "bigint", name: "id_equacao" })
+  // idEquacao: string;
 
   @Column("character varying", { name: "nome", nullable: true, length: 50 })
   nome: string | null;
@@ -22,4 +24,7 @@ export class EquacaoVolume {
     length: 1000,
   })
   expressao: string | null;
+
+  @OneToMany(() => Upa, (upa) => upa.equacaoVolume)
+  upa: Upa[];
 }

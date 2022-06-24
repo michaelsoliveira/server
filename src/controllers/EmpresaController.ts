@@ -1,22 +1,23 @@
 // import { User } from "../entities/User"
 import { Request, Response } from "express";
-import EmpresaService from "../services/empresa.service";
+import userService from "src/services/user.service";
+import empresaService from "../services/empresa.service";
 
 export class EmpresaController {
     async store(request : Request, response: Response) : Promise<Response> {
         try {    
-            const empresa = await EmpresaService.create(request.body, request.user?.id)
+            const empresa = await empresaService.create(request.body, request.user?.id)
             return response.json({
                 error: false,
                 empresa,
-                errorMessage: null
+                message: null
             })
 
         } catch (error) {
             return response.json({
                 error: true,
                 empresa: null,
-                errorMessage: error.message
+                message: error.message
             })
         }
     }
@@ -24,12 +25,12 @@ export class EmpresaController {
      async update(request : Request, response: Response) : Promise<Response> {
         const { id } = request.params
          try {    
-             const empresa = await EmpresaService.update(id, request.body, request.user?.id)
+             const empresa = await empresaService.update(id, request.body, request.user?.id)
              
             return response.json({
                 error: false,
                 empresa,
-                errorMessage: null
+                message: null
             })
 
         } catch (error) {
@@ -45,7 +46,7 @@ export class EmpresaController {
         const { id } = request.params
 
         try {
-            await EmpresaService.delete(id)
+            await empresaService.delete(id)
 
             return response.status(200).json({
                 error: false,
@@ -62,18 +63,43 @@ export class EmpresaController {
 
     async findAll(request: Request, response: Response) {
         try {
-            const empresas = await EmpresaService.getAll(request.user?.id)
+            const empresas = await empresaService.getAll(request.user?.id)
 
             return response.json({
                 error: false,
                 empresas,
-                errorMessage: null
+                message: null
             })
         } catch(error) {
             return response.json({
-                error: false,
+                error: true,
                 empresas: [],
-                errorMessage: null
+                message: `Error: ${error.message}`
+            })
+        }
+    }
+
+    async findUsers(request: Request, response: Response) {
+        try {
+            const { empresaId } = request.params
+            const { data, perPage, orderBy, order, page, skip, count } = await empresaService.getUsers(empresaId, request.query)
+
+            return response.json({
+                error: false,
+                users: data,
+                orderBy,
+                order,
+                perPage,
+                page,
+                skip,
+                count,
+                message: 'Usuários carregados com sucesso!'
+            })
+        } catch (error) {
+            return response.json({
+                error: true,
+                users: [],
+                message: `Error: ${error.message}`
             })
         }
     }
@@ -81,7 +107,7 @@ export class EmpresaController {
     async findOne(request: Request, response: Response) {
         const { id } = request.params
         try {
-            const empresa = await EmpresaService.findOne(id)
+            const empresa = await empresaService.findOne(id)
 
             return response.json(empresa)
         } catch(error) {

@@ -7,7 +7,6 @@ import readline from "readline";
 export class EspecieController {
     async store(request : Request, response: Response) : Promise<Response> {
         try {    
-            // const empresa = await EmpresaService.create({ razaoSocial, nomeFantasia, cnpj, respTecnico, creaResp, cep, endereco, complemento, municipio, estado, telefone, regAmbiental })
             const especie = await especieService.create(request.body)
             return response.json({
                 error: false,

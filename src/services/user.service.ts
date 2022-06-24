@@ -2,7 +2,9 @@ import bcrypt from "bcrypt"
 import { DataStoredInToken } from "src/interfaces/DataStoredInToken"
 import { getRepository, Repository, getConnection } from "typeorm"
 import { User } from "../entities/User"
-
+import nodemailer from 'nodemailer'
+import { Empresa } from "../entities/Empresa"
+import { prismaClient } from "../database/prismaClient"
 export interface UserRequest {
     username: string,
     email: string,
@@ -25,11 +27,16 @@ class UserService {
             username: data?.username,
             email: data?.email,
             password: passwordHash,
+            image: data?.image,
             provider: data?.provider,
             idProvider: data?.idProvider
         }
+        const empresa = data?.empresaId && await getRepository(Empresa).findOne(data?.empresaId)
 
         const user = userRepository.create(preparedData)
+        if (empresa) {
+            user.empresas = [empresa]
+        }
 
         await user.save()
 
@@ -50,6 +57,7 @@ class UserService {
             username: data?.username,
             email: data?.email,
             password: passwordHash,
+            image: data?.image,
             provider: data?.provider,
             idProvider: data?.idProvider
         }
@@ -79,6 +87,7 @@ class UserService {
             username: userData?.username,
             email: userData?.email,
             password: passwordHash,
+            image: userData?.image,
             provider: userData?.provider,
             idProvider: userData?.idProvider
         }
@@ -117,6 +126,89 @@ class UserService {
                 .andWhere("user.idProvider = :idProvider", { idProvider })
 
         return data.getOne()
+    }
+
+    async sendMail(data: any) {
+        const { email, name, message } = data
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_PWD
+            }
+        });
+
+        const escapedEmail = `${email.replace(/\./g, "&#8203;.")}`
+        const escapedName = `${name.replace(/\./g, "&#8203;.")}`
+
+        // Some simple styling options
+        const backgroundColor = "#f9f9f9"
+        const textColor = "#444444"
+        const mainBackgroundColor = "#ffffff"
+        const buttonBackgroundColor = "#346df1"
+        const buttonBorderColor = "#346df1"
+        const buttonTextColor = "#ffffff"
+        const url = 'http://bomanejo.com'
+
+        const linkLogin = `
+            <a href="${url}" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${buttonTextColor}; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid ${buttonBorderColor}; display: inline-block; font-weight: bold;">
+                Login
+            </a>
+        `
+
+        
+    // send mail with defined transport object
+    transporter.sendMail({
+        from: '"Michael Santos de Oliveira 👻" <michaelsoliveira@gmail.com>', // sender address
+        to: email, // list of receivers
+        subject: "Acesso ao Software BOManejo Web", // Subject line
+        text: `Usuário ${name} foi cadastrado com Sucesso!`, // plain text body
+        html: `
+            <body style="background: ${backgroundColor};">
+                <table style="padding: 10px 0px 0px 10px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                    <td align="center" style="padding: 10px 0px 20px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
+                        <strong>Seja bem vindo ${escapedName}</strong>
+                    </td>
+                    </tr>
+                </table>
+                <table width="100%" border="0" cellspacing="20" cellpadding="0" style="background: ${mainBackgroundColor}; max-width: 600px; margin: auto; border-radius: 10px;">
+                    <tr>
+                    <td align="center" style="padding: 10px 0px 0px 0px; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
+                        Você pode realizar o login utilizando seu email: <strong>${escapedEmail}</strong>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td align="center" style="padding: 20px 0;">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td align="center" style="border-radius: 5px; padding: 10px 20px; font-size: 18px; color: #ffffff;" bgcolor="${buttonBackgroundColor}">
+                                ${message}
+                            </td>
+                        </tr>
+                        </table>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td align="center" style="padding: 0px 0px 10px 0px; font-size: 14px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
+                        Você não precisa retornar este email
+                    </td>
+                    </tr>
+                </table>
+            </body>`, // html body
+    }, (error, data) => {
+        if (error) {
+            console.log('Error: ', error)
+        } else {
+            console.log("Message sent: %s", data.response);
+        }
+    });
+
+    
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+    // Preview only available when sending through an Ethereal account
+    // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     }
 
     async findWithPassword(id: string) {

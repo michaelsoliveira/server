@@ -1,6 +1,6 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-@Index("equacao_modelo_pkey", ["equacaoModeloId"], { unique: true })
+// @Index("equacao_modelo_pkey", ["equacaoModeloId"], { unique: true })
 @Entity("equacao_modelo", { schema: "public" })
 export class EquacaoModelo {
   @PrimaryGeneratedColumn({ type: "bigint", name: "equacao_modelo_id" })

@@ -7,6 +7,26 @@ import cors from 'cors'
 import { server } from "./config"
 
 const app = express()
+import fetch from 'cross-fetch'
+
+app.get('/ia', async function(req, res) {
+  await fetch('http://127.0.0.1:5000/flask', {
+    method: 'GET'
+  })
+  .then(res => {
+    if (res.status >= 400) {
+      throw new Error("Bad response from server");
+    }
+    return res.text();
+  })
+  .then(data => {
+    res.send(data)
+  })
+  .catch(err => {
+    console.error(err);
+  });
+})
+
 var corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200,

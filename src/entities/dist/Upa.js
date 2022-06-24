@@ -22,6 +22,8 @@ exports.__esModule = true;
 exports.Upa = void 0;
 var typeorm_1 = require("typeorm");
 var BaseEntity_1 = require("./BaseEntity");
+var EquacaoVolume_1 = require("./EquacaoVolume");
+var SpatialRefSys_1 = require("./SpatialRefSys");
 var Umf_1 = require("./Umf");
 var Ut_1 = require("./Ut");
 // @Index("upa_pkey", ["idUpa"], { unique: true })
@@ -41,29 +43,12 @@ var Upa = /** @class */ (function (_super) {
         })
     ], Upa.prototype, "descricao");
     __decorate([
-        typeorm_1.Column({
-            name: "equacao_volume_arvore",
-            nullable: true,
-            length: 1000
-        })
-    ], Upa.prototype, "equacaoVolumeArvore");
-    __decorate([
-        typeorm_1.Column({
-            name: "equacao_abasal_arvore",
-            nullable: true,
-            length: 1000
-        })
-    ], Upa.prototype, "equacaoAbasalArvore");
+        typeorm_1.ManyToOne(function () { return EquacaoVolume_1.EquacaoVolume; }, function (equacaoVolume) { return equacaoVolume.upa; }),
+        typeorm_1.JoinColumn([{ name: "id_equacao_volume", referencedColumnName: "id" }])
+    ], Upa.prototype, "equacaoVolume");
     __decorate([
         typeorm_1.Column({ name: "tipo", nullable: true })
     ], Upa.prototype, "tipo");
-    __decorate([
-        typeorm_1.Column({
-            name: "sys_ref_coord",
-            nullable: true,
-            length: 100
-        })
-    ], Upa.prototype, "sysRefCoord");
     __decorate([
         typeorm_1.Column({ name: "epsg", nullable: true })
     ], Upa.prototype, "epsg");
@@ -77,6 +62,10 @@ var Upa = /** @class */ (function (_super) {
     __decorate([
         typeorm_1.OneToMany(function () { return Ut_1.Ut; }, function (ut) { return ut.upa; })
     ], Upa.prototype, "uts");
+    __decorate([
+        typeorm_1.ManyToOne(function () { return SpatialRefSys_1.SpatialRefSys; }, function (spatialRefSys) { return spatialRefSys.upa; }),
+        typeorm_1.JoinColumn([{ name: "srid", referencedColumnName: "srid" }])
+    ], Upa.prototype, "spatialRefSys");
     Upa = __decorate([
         typeorm_1.Entity("upa", { schema: "public" })
     ], Upa);

@@ -9,7 +9,7 @@ export class CategoriaEspecieController {
             return response.json({
                 error: false,
                 categoria,
-                message: null
+                message: `Categoria de espécie ${categoria.nome} cadastrada com SUCESSO!!!`
             })
 
         } catch (error) {
@@ -28,7 +28,7 @@ export class CategoriaEspecieController {
             return response.json({
                 error: false,
                 categoria,
-                message: null
+                message: `Categoria de espécie ${categoria.nome} atualizada com SUCESSO!!!`
             })
 
         } catch (error) {

@@ -1,4 +1,4 @@
-import { Column, Entity, Exclusion, JoinTable, ManyToMany, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
 import { BaseModel } from "./BaseEntity";
 import { Empresa } from "./Empresa";
 import { Permission } from "./Permission";
@@ -24,6 +24,12 @@ export class User extends BaseModel {
     @Column({ name: "id_provider", nullable: true })
     idProvider: string
 
+    @Column({ nullable: true })
+    image: string
+
+    @Column({ name: "email_verified", nullable: true })
+    emailVerified: Date
+
     // @OneToMany(() => Poa, (poa) => poa.user)
     // poas: Poa[];
 
@@ -43,7 +49,7 @@ export class User extends BaseModel {
     })
     permissions: Permission[];
 
-    @OneToMany(() => Empresa, (empresa) => empresa.user)
+    @ManyToMany(() => Empresa, (empresa) => empresa.users)
     empresas: Empresa[]
 
     @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)

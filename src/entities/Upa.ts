@@ -8,12 +8,14 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { BaseModel } from "./BaseEntity";
+import { EquacaoVolume } from "./EquacaoVolume";
+import { SpatialRefSys } from "./SpatialRefSys";
 import { Umf } from "./Umf";
 import { Ut } from "./Ut";
 
 // @Index("upa_pkey", ["idUpa"], { unique: true })
 @Entity("upa", { schema: "public" })
-export class Upa extends BaseModel{
+export class Upa extends BaseModel {
   // @PrimaryGeneratedColumn({ type: "bigint", name: "id_upa" })
   // idUpa: string;
 
@@ -27,29 +29,12 @@ export class Upa extends BaseModel{
   })
   descricao: string;
 
-  @Column({
-    name: "equacao_volume_arvore",
-    nullable: true,
-    length: 1000,
-  })
-  equacaoVolumeArvore: string;
-
-  @Column({
-    name: "equacao_abasal_arvore",
-    nullable: true,
-    length: 1000,
-  })
-  equacaoAbasalArvore: string;
+  @ManyToOne(() => EquacaoVolume, (equacaoVolume) => equacaoVolume.upa)
+  @JoinColumn([{ name: "id_equacao_volume", referencedColumnName: "id" }])
+  equacaoVolume: EquacaoVolume[]
 
   @Column({ name: "tipo", nullable: true })
   tipo: number;
-
-  @Column({
-    name: "sys_ref_coord",
-    nullable: true,
-    length: 100,
-  })
-  sysRefCoord: string;
 
   @Column({ name: "epsg", nullable: true })
   epsg: number;
@@ -63,4 +48,8 @@ export class Upa extends BaseModel{
 
   @OneToMany(() => Ut, (ut) => ut.upa)
   uts: Ut[];
+
+  @ManyToOne(() => SpatialRefSys, (spatialRefSys) => spatialRefSys.upa)
+  @JoinColumn([{ name: "srid", referencedColumnName: "srid" }])
+  spatialRefSys: SpatialRefSys[]
 }

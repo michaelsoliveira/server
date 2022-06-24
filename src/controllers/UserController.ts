@@ -6,7 +6,7 @@ import {
     CreateRolePermissionService,
     CreateUserACLService
 } from "../services/acl.service";
-import UserService from "../services/user.service";
+import userService from "../services/user.service";
 
 export interface BaseUser {
     username: string,
@@ -16,15 +16,15 @@ export interface BaseUser {
 
 export class UserController {
     async store(request : Request, response: Response) : Promise<Response> {
-        const { username, email, password, provider, idProvider } = request.body;
+        const { username, email, password, provider, idProvider, image, empresaId } = request.body;
         
         try {    
-            const user = await UserService.create({ username, email, password, provider, idProvider })
+            const user = await userService.create({ username, email, password, provider, idProvider, image, empresaId })
             
             return response.json({
                 error: false,
                 user,
-                errorMessage: null
+                message: null
             })
 
         } catch (error) {
@@ -40,7 +40,7 @@ export class UserController {
         const id = request.user?.id
         
         try {    
-            const user = await UserService.update(id, request.body)
+            const user = await userService.update(id, request.body)
             
             return response.json({
                 error: false,
@@ -62,7 +62,7 @@ export class UserController {
         const { oldPassword, newPassword } = request.body;
         
         try {    
-            const user = await UserService.updatePassword(id, oldPassword, newPassword)
+            const user = await userService.updatePassword(id, oldPassword, newPassword)
             
             return response.json({
                 error: false,
@@ -77,6 +77,10 @@ export class UserController {
                 message: error.message
             })
         }
+    }
+
+    async sendMail(request: Request, response: Response) {
+        userService.sendMail(request.body)
     }
 
     async createPermission(request: Request, response: Response) {
@@ -148,7 +152,7 @@ export class UserController {
         const { provider, idProvider }: any = request.query
         
         try {
-            const user = await UserService.findByProvider(provider, idProvider)
+            const user = await userService.findByProvider(provider, idProvider)
             
             return response.json(user)
         } catch (error) {
@@ -158,7 +162,7 @@ export class UserController {
 
     async findAll(request: Request, response: Response) {
         try {
-            let users = await UserService.getAll()
+            let users = await userService.getAll()
 
             return response.json(users)
         } catch(error) {
@@ -169,7 +173,7 @@ export class UserController {
     async findOne(request: Request, response: Response) {
         const { id } = request.params
         try {
-            let users = await UserService.findOne(id)
+            let users = await userService.findOne(id)
 
             return response.json(users)
         } catch(error) {

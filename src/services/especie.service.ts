@@ -38,7 +38,6 @@ class EspecieService {
     }
 
     async deleteEspecies(ids: string[]) {
-        console.log(ids)
         ids.forEach(id => {
             getRepository(Especie).delete(id)
         })   
